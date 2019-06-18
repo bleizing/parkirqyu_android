@@ -93,4 +93,13 @@ public class PrefUtils {
     public String getSaldo() {
         return pref.getString(Constants.PREF_SALDO, "");
     }
+
+    public void setUserType(int userType) {
+        editor.putInt(Constants.PREF_USER_TYPE, userType);
+        editor.commit();
+    }
+
+    public int getUserType() {
+        return pref.getInt(Constants.PREF_USER_TYPE,0);
+    }
 }

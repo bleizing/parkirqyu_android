@@ -1,32 +1,55 @@
-package com.bleizing.parkirqyu.models;
+package com.bleizing.parkirqyu.network;
 
-public class User {
-    private int userId;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class AddEmployeeRequest extends BaseRequest {
+
+    @SerializedName("nama")
+    @Expose
     private String nama;
-    private String jenisKelamin;
-    private String tempatLahir;
-    private String tanggalLahir;
-    private String alamat;
-    private String saldo;
-    private int userType;
 
-    public User(int userId, String nama, String jenisKelamin, String tempatLahir, String tanggalLahir, String alamat, String saldo, int userType) {
-        this.userId = userId;
+    @SerializedName("email")
+    @Expose
+    private String email;
+
+    @SerializedName("jenis_kelamin")
+    @Expose
+    private String jenisKelamin;
+
+    @SerializedName("alamat")
+    @Expose
+    private String alamat;
+
+    @SerializedName("tempat_lahir")
+    @Expose
+    private String tempatLahir;
+
+    @SerializedName("tanggal_lahir")
+    @Expose
+    private String tanggalLahir;
+
+    @SerializedName("user_type")
+    @Expose
+    private String userType;
+
+    public AddEmployeeRequest(int userId, String nama, String email, String jenisKelamin, String alamat, String tempatLahir, String tanggalLahir, String userType) {
+        super(userId);
         this.nama = nama;
+        this.email = email;
         this.jenisKelamin = jenisKelamin;
+        this.alamat = alamat;
         this.tempatLahir = tempatLahir;
         this.tanggalLahir = tanggalLahir;
-        this.alamat = alamat;
-        this.saldo = saldo;
         this.userType = userType;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserType() {
+        return userType;
     }
 
     public void setNama(String nama) {
@@ -35,6 +58,14 @@ public class User {
 
     public String getNama() {
         return nama;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setJenisKelamin(String jenisKelamin) {
@@ -67,21 +98,5 @@ public class User {
 
     public String getAlamat() {
         return alamat;
-    }
-
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
-    }
-
-    public String getSaldo() {
-        return saldo;
-    }
-
-    public void setUserType(int userType) {
-        this.userType = userType;
-    }
-
-    public int getUserType() {
-        return userType;
     }
 }

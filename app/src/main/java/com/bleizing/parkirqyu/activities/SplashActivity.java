@@ -33,8 +33,9 @@ public class SplashActivity extends AppCompatActivity {
             String tanggalLahir = prefUtils.getTanggalLahir();
             String alamat = prefUtils.getAlamat();
             String saldo = prefUtils.getSaldo();
+            int userType = prefUtils.getUserType();
 
-            User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo);
+            User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
             Model.setUser(user);
         }
 

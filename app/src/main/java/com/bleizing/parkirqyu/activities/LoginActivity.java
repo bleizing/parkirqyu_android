@@ -48,10 +48,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editEmail = findViewById(R.id.edit_email);
-        editPassword = findViewById(R.id.edit_password);
+        editEmail = (EditText) findViewById(R.id.edit_email);
+        editPassword = (EditText) findViewById(R.id.edit_password);
 
-        Button btnLogin = findViewById(R.id.btn_login);
+        Button btnLogin = (Button) findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,10 +90,11 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
                             t.printStackTrace();
+                            loginFailed(getString(R.string.connection_error));
                         }
                     });
                 } else {
-                    loginFailed("Harap Lengkapi Data Terlebih Dahulu");
+                    loginFailed(getString(R.string.data_incompleted));
                 }
             }
         });
@@ -107,8 +108,9 @@ public class LoginActivity extends AppCompatActivity {
         String tanggalLahir = data.getTanggalLahir();
         String alamat = data.getAlamat();
         String saldo = data.getSaldo();
+        int userType = data.getUserType();
 
-        User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo);
+        User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
         Model.setUser(user);
 
         PrefUtils prefUtils = new PrefUtils(this);
@@ -121,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         prefUtils.setTanggalLahir(tanggalLahir);
         prefUtils.setAlamat(alamat);
         prefUtils.setSaldo(saldo);
+        prefUtils.setUserType(userType);
 
         progressDialog.dismiss();
 

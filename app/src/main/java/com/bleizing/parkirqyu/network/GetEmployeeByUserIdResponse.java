@@ -3,10 +3,10 @@ package com.bleizing.parkirqyu.network;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse extends BaseResponse<LoginResponse.Data> {
+public class GetEmployeeByUserIdResponse extends BaseResponse<GetEmployeeByUserIdResponse.Data> {
 
     @Override
-    public void setData(LoginResponse.Data data) {
+    public void setData(Data data) {
         super.setData(data);
     }
 
@@ -19,9 +19,17 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
         @Expose
         private String nama;
 
+        @SerializedName("email")
+        @Expose
+        private String email;
+
         @SerializedName("jenis_kelamin")
         @Expose
         private String jenisKelamin;
+
+        @SerializedName("alamat")
+        @Expose
+        private String alamat;
 
         @SerializedName("tempat_lahir")
         @Expose
@@ -31,17 +39,25 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
         @Expose
         private String tanggalLahir;
 
-        @SerializedName("alamat")
-        @Expose
-        private String alamat;
-
-        @SerializedName("saldo")
-        @Expose
-        private String saldo;
-
         @SerializedName("user_type")
         @Expose
-        private int userType;
+        private String userType;
+
+        public void setUserType(String userType) {
+            this.userType = userType;
+        }
+
+        public String getUserType() {
+            return userType;
+        }
+
+        public void setNama(String nama) {
+            this.nama = nama;
+        }
+
+        public String getNama() {
+            return nama;
+        }
 
         public void setUserId(int userId) {
             this.userId = userId;
@@ -51,12 +67,12 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
             return userId;
         }
 
-        public void setNama(String nama) {
-            this.nama = nama;
+        public void setEmail(String email) {
+            this.email = email;
         }
 
-        public String getNama() {
-            return nama;
+        public String getEmail() {
+            return email;
         }
 
         public void setJenisKelamin(String jenisKelamin) {
@@ -89,22 +105,6 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
 
         public String getAlamat() {
             return alamat;
-        }
-
-        public void setSaldo(String saldo) {
-            this.saldo = saldo;
-        }
-
-        public String getSaldo() {
-            return saldo;
-        }
-
-        public void setUserType(int userType) {
-            this.userType = userType;
-        }
-
-        public int getUserType() {
-            return userType;
         }
     }
 }

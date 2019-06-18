@@ -4,6 +4,9 @@ public class Constants {
     public static final String BASE_URL = "https://parkirqyu.bleizing.com/api/";
 
     public static final int STATUS_CODE_SUCCESS = 200;
+    public static final int STATUS_CODE_CREATED = 201;
+    public static final int STATUS_CODE_UPDATED = 202;
+    public static final int STATUS_CODE_DELETED = 203;
     public static final int STATUS_CODE_BAD_REQUEST = 400;
 
     public static final String PREF_LOGGED_IN = "IsLoggedIn";
@@ -14,4 +17,5 @@ public class Constants {
     public static final String PREF_TANGGAL_LAHIR = "tanggal_lahir";
     public static final String PREF_ALAMAT = "alamat";
     public static final String PREF_SALDO = "saldo";
+    public static final String PREF_USER_TYPE = "user_type";
 }

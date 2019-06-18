@@ -1,18 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+        <!--Bungkus Scroll View-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--Profile-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:textSize="@dimen/_14ssp"/>
+
+                    <TextView
+                        android:id="@+id/tv_logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:text="Logout"
+                        android:textSize="@dimen/_13ssp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_15sdp"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:background="@color/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NAMA"
+                            android:textSize="@dimen/_13ssp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lihat Detail >"
+                            android:textSize="@dimen/_11ssp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SALDO"
+                            android:textSize="@dimen/_13ssp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+ Topup Saldo"
+                            android:textSize="@dimen/_11ssp"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!--Tarif Parkir-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:paddingTop="@dimen/_15sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingRight="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp"
+                android:paddingBottom="@dimen/_15sdp"
+                android:background="@color/colorPrimary">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Tarif Parkir >"
+                    android:textSize="@dimen/_14ssp"/>
+
+            </LinearLayout>
+
+            <!--Data Karyawan-->
+            <LinearLayout
+                android:id="@+id/ll_karyawan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:paddingTop="@dimen/_15sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingRight="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp"
+                android:paddingBottom="@dimen/_15sdp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Data Karyawan >"
+                    android:textSize="@dimen/_14ssp"/>
+
+            </LinearLayout>
+
+            <!--Kendaraan Sedang Parkir-->
+            <LinearLayout
+                android:id="@+id/ll_kendaraan_parkir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kendaraan Sedang Parkir"
+                    android:textSize="@dimen/_14ssp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/kendaraan_parkir_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"/>
+
+            </LinearLayout>
+
+            <!--List Kendaraan-->
+            <LinearLayout
+                android:id="@+id/ll_kendaraan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kendaraan"
+                    android:textSize="@dimen/_14ssp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/kendaraan_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"/>
+
+            </LinearLayout>
+
+            <!--Bertugas Menjaga Keluar Parkir-->
+            <Button
+                android:id="@+id/btn_bertugas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:visibility="gone"
+                android:text="Mulai Bertugas Menjaga Pintu Keluar"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.v4.widget.SwipeRefreshLayout>
