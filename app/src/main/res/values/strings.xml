@@ -27,4 +27,5 @@
     <string name="konfirmasi_yakin">Yakin</string>
     <string name="konfirmasi_batal">Batal</string>
     <string name="delete_data_success">Menghapus Data Berhasil</string>
+    <string name="hapus">Hapus</string>
 </resources>

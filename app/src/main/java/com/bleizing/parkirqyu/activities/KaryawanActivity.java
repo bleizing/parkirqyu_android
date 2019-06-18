@@ -113,17 +113,6 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
 
         rvKaryawan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvKaryawan.setItemAnimator(new DefaultItemAnimator());
-        rvKaryawan.addOnItemTouchListener(new RecyclerTouchListener(this, rvKaryawan, new RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
         adapter = new KaryawanAdapter(this, karyawanArrayList);
         rvKaryawan.setAdapter(adapter);
     }

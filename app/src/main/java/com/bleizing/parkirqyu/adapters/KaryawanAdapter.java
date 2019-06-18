@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bleizing.parkirqyu.R;
 import com.bleizing.parkirqyu.activities.KaryawanActivity;
+import com.bleizing.parkirqyu.activities.KaryawanDetailActivity;
 import com.bleizing.parkirqyu.activities.KaryawanFormActivity;
 import com.bleizing.parkirqyu.models.Karyawan;
 
@@ -44,6 +46,16 @@ public class KaryawanAdapter extends RecyclerView.Adapter<KaryawanAdapter.ViewHo
 
         viewHolder.tvNama.setText(karyawan.getNama());
         viewHolder.tvEmail.setText(karyawan.getEmail());
+
+        viewHolder.llItemKaryawan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, KaryawanDetailActivity.class);
+                intent.putExtra("karyawan", karyawan);
+                context.startActivity(intent);
+                ((KaryawanActivity)context).finish();
+            }
+        });
 
         viewHolder.btnUbah.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +108,8 @@ public class KaryawanAdapter extends RecyclerView.Adapter<KaryawanAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        private LinearLayout llItemKaryawan;
+
         private TextView tvNama;
         private TextView tvEmail;
 
@@ -105,6 +119,8 @@ public class KaryawanAdapter extends RecyclerView.Adapter<KaryawanAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            llItemKaryawan = (LinearLayout) itemView.findViewById(R.id.ll_item_karyawan);
 
             tvNama = (TextView) itemView.findViewById(R.id.tv_nama);
             tvEmail = (TextView) itemView.findViewById(R.id.tv_email);

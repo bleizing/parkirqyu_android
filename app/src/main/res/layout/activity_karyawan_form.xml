@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_25sdp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -20,13 +21,11 @@
                 android:id="@+id/tv_header_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_25sdp"
                 android:text="Input"
                 android:textSize="@dimen/_24ssp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_25sdp"
                 android:text=" Karyawan"
                 android:textSize="@dimen/_24ssp"/>
 

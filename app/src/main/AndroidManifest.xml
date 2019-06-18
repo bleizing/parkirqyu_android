@@ -17,7 +17,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".activities.KaryawanFormActivity"
+        <activity android:name=".activities.KaryawanDetailActivity"></activity>
+        <activity
+            android:name=".activities.KaryawanFormActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.KaryawanActivity" />
         <activity android:name=".activities.SplashActivity">

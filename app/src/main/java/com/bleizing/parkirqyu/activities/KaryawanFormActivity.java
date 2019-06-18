@@ -42,8 +42,6 @@ public class KaryawanFormActivity extends AppCompatActivity {
 
     private Karyawan karyawan;
 
-    private TextView tvHeaderInput;
-
     private EditText editNama;
     private EditText editEmail;
     private EditText editAlamat;
@@ -137,7 +135,7 @@ public class KaryawanFormActivity extends AppCompatActivity {
 
         karyawan = null;
 
-        tvHeaderInput = (TextView) findViewById(R.id.tv_header_input);
+        TextView tvHeaderInput = (TextView) findViewById(R.id.tv_header_input);
 
         Intent intent = getIntent();
         if (intent.getParcelableExtra("karyawan") != null) {
@@ -167,6 +165,8 @@ public class KaryawanFormActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent intent = new Intent(KaryawanFormActivity.this, KaryawanActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -190,7 +190,7 @@ public class KaryawanFormActivity extends AppCompatActivity {
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
                             Toast.makeText(KaryawanFormActivity.this, getString(R.string.data_empty), Toast.LENGTH_LONG).show();
-                            finish();
+                            onBackPressed();
                             break;
                     }
                 }
@@ -201,7 +201,7 @@ public class KaryawanFormActivity extends AppCompatActivity {
                 t.printStackTrace();
                 Toast.makeText(KaryawanFormActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
-                finish();
+                onBackPressed();
             }
         });
     }
@@ -261,7 +261,7 @@ public class KaryawanFormActivity extends AppCompatActivity {
                     switch (response.body().getStatusCode()) {
                         case Constants.STATUS_CODE_UPDATED :
                             showToast(getString(R.string.edit_data_success));
-                            finish();
+                            onBackPressed();
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
                             if (response.body().getData().getErrorList() != null) {
