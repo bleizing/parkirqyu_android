@@ -49,6 +49,8 @@ public class KendaraanActivity extends AppCompatActivity implements SwipeRefresh
 
     public Karyawan karyawan;
 
+    private RecyclerView rvKendaraan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public class KendaraanActivity extends AppCompatActivity implements SwipeRefresh
     }
 
     private void initKendaraan() {
-        RecyclerView rvKendaraan = (RecyclerView) findViewById(R.id.kendaraan_recycler_view);
+        rvKendaraan = (RecyclerView) findViewById(R.id.kendaraan_recycler_view);
 
         rvKendaraan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvKendaraan.setItemAnimator(new DefaultItemAnimator());
@@ -178,10 +180,11 @@ public class KendaraanActivity extends AppCompatActivity implements SwipeRefresh
                 Kendaraan kendaraan = new Kendaraan(kendaraanId, nomorRegistrasi, nama, alamat, merk, type, tahunPembuatan, nomorRangka, nomorMesin, vehicleType);
                 kendaraanArrayList.add(kendaraan);
             }
-            adapter.updateKendaraanArrayList(kendaraanArrayList);
         } else {
+            rvKendaraan.setVisibility(View.GONE);
             Toast.makeText(KendaraanActivity.this, getString(R.string.data_empty), Toast.LENGTH_LONG).show();
         }
+        adapter.updateKendaraanArrayList(kendaraanArrayList);
         SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
     }
 
