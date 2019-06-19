@@ -18,6 +18,7 @@ import com.bleizing.parkirqyu.R;
 import com.bleizing.parkirqyu.activities.KaryawanActivity;
 import com.bleizing.parkirqyu.activities.KaryawanDetailActivity;
 import com.bleizing.parkirqyu.activities.KaryawanFormActivity;
+import com.bleizing.parkirqyu.activities.KendaraanActivity;
 import com.bleizing.parkirqyu.models.Karyawan;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class KaryawanAdapter extends RecyclerView.Adapter<KaryawanAdapter.ViewHo
                 Intent intent = new Intent(context, KaryawanFormActivity.class);
                 intent.putExtra("karyawan", karyawan);
                 context.startActivity(intent);
+                ((KaryawanActivity)context).finish();
             }
         });
 
@@ -87,7 +89,9 @@ public class KaryawanAdapter extends RecyclerView.Adapter<KaryawanAdapter.ViewHo
         viewHolder.btnLihatKendaraan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Lihat Kendaraan " + karyawan.getEmail(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(context, KendaraanActivity.class);
+                intent.putExtra("karyawan", karyawan);
+                context.startActivity(intent);
             }
         });
     }

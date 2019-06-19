@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item_kendaraan"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/_10sdp"
@@ -67,7 +68,36 @@
         android:layout_marginStart="@dimen/_50sdp"
         android:layout_marginRight="@dimen/_50sdp"
         android:layout_marginEnd="@dimen/_50sdp"
+        android:visibility="gone"
         android:text="Lihat Barcode"
         android:textSize="@dimen/_12ssp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_item_kendaraan_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_50sdp"
+        android:layout_marginRight="@dimen/_50sdp"
+        android:layout_marginEnd="@dimen/_50sdp">
+
+        <Button
+            android:id="@+id/btn_ubah"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="UBAH"
+            android:textSize="@dimen/_10ssp"/>
+
+        <Button
+            android:id="@+id/btn_hapus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="HAPUS"
+            android:textSize="@dimen/_10ssp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

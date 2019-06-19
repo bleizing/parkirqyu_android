@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
             @Override
             public void onFailure(Call<GetUserVehicleResponse> call, Throwable t) {
+                t.printStackTrace();
                 llKendaraan.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);

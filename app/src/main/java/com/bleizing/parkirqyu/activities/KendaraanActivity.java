@@ -9,24 +9,24 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bleizing.parkirqyu.Constants;
 import com.bleizing.parkirqyu.R;
-import com.bleizing.parkirqyu.RecyclerTouchListener;
-import com.bleizing.parkirqyu.RecyclerViewClickListener;
 import com.bleizing.parkirqyu.adapters.KaryawanAdapter;
+import com.bleizing.parkirqyu.adapters.KendaraanAdapter;
 import com.bleizing.parkirqyu.models.Karyawan;
+import com.bleizing.parkirqyu.models.Kendaraan;
 import com.bleizing.parkirqyu.models.Model;
 import com.bleizing.parkirqyu.network.APIService;
-import com.bleizing.parkirqyu.network.BaseRequest;
 import com.bleizing.parkirqyu.network.DataResponse;
-import com.bleizing.parkirqyu.network.DeleteEmployeeRequest;
-import com.bleizing.parkirqyu.network.DeleteEmployeeResponse;
-import com.bleizing.parkirqyu.network.GetAllEmployeeResponse;
+import com.bleizing.parkirqyu.network.DeleteVehicleRequest;
+import com.bleizing.parkirqyu.network.DeleteVehicleResponse;
+import com.bleizing.parkirqyu.network.GetKendaraanByUserRequest;
+import com.bleizing.parkirqyu.network.GetUserVehicleResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
 import com.bleizing.parkirqyu.utils.SwipeRefreshUtils;
 
@@ -36,51 +36,64 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshUtils.SwipeRefreshUtilsListener {
+public class KendaraanActivity extends AppCompatActivity implements SwipeRefreshUtils.SwipeRefreshUtilsListener {
     private static final String TAG = "KaryawanActivity";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private KaryawanAdapter adapter;
+    private ArrayList<Kendaraan> kendaraanArrayList;
 
-    private ArrayList<Karyawan> karyawanArrayList;
+    private KendaraanAdapter adapter;
 
     private ProgressDialog progressDialog;
+
+    public Karyawan karyawan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_karyawan);
+        setContentView(R.layout.activity_kendaraan);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(refreshListener);
 
-        FloatingActionButton fabAddKaryawan = (FloatingActionButton) findViewById(R.id.fab_add_karyawan);
-        fabAddKaryawan.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabAddKendaraan = (FloatingActionButton) findViewById(R.id.fab_add_kendaraan);
+        fabAddKendaraan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(KaryawanActivity.this, KaryawanFormActivity.class);
+                Intent intent = new Intent(KendaraanActivity.this, KendaraanFormActivity.class);
+                intent.putExtra("karyawan", karyawan);
                 startActivity(intent);
                 finish();
             }
         });
 
-        karyawanArrayList = new ArrayList<>();
-        initKaryawan();
+        karyawan = null;
+
+        Intent intent = getIntent();
+        if (intent.getParcelableExtra("karyawan") != null) {
+            karyawan = intent.getParcelableExtra("karyawan");
+        }
+
+        TextView tvHeaderNama = (TextView) findViewById(R.id.tv_header_nama);
+        tvHeaderNama.setText(karyawan.getNama());
+
+        kendaraanArrayList = new ArrayList<>();
+        initKendaraan();
     }
 
     @Override
     public void onProcessRefresh() {
-        getKaryawanList();
+        getKendaraanList();
     }
 
     private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             SwipeRefreshUtils.showRefresh(swipeRefreshLayout);
-            SwipeRefreshUtils.processRefresh(KaryawanActivity.this);
+            SwipeRefreshUtils.processRefresh(KendaraanActivity.this);
         }
     };
 
@@ -108,30 +121,30 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
         finish();
     }
 
-    private void initKaryawan() {
-        RecyclerView rvKaryawan = (RecyclerView) findViewById(R.id.karyawan_recycler_view);
+    private void initKendaraan() {
+        RecyclerView rvKendaraan = (RecyclerView) findViewById(R.id.kendaraan_recycler_view);
 
-        rvKaryawan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rvKaryawan.setItemAnimator(new DefaultItemAnimator());
-        adapter = new KaryawanAdapter(this, karyawanArrayList);
-        rvKaryawan.setAdapter(adapter);
+        rvKendaraan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rvKendaraan.setItemAnimator(new DefaultItemAnimator());
+        adapter = new KendaraanAdapter(this, kendaraanArrayList);
+        rvKendaraan.setAdapter(adapter);
     }
 
-    private void getKaryawanList() {
-        if (karyawanArrayList != null && karyawanArrayList.size() > 0) {
-            karyawanArrayList.clear();
+    private void getKendaraanList() {
+        if (kendaraanArrayList != null && kendaraanArrayList.size() > 0) {
+            kendaraanArrayList.clear();
         }
 
-        BaseRequest baseRequest = new BaseRequest(Model.getUser().getUserId());
+        GetKendaraanByUserRequest request = new GetKendaraanByUserRequest(Model.getUser().getUserId(), karyawan.getUserId());
         APIService apiService = HTTPClient.getClient().create(APIService.class);
-        Call<GetAllEmployeeResponse> call = apiService.getAllEmployee(baseRequest);
-        call.enqueue(new Callback<GetAllEmployeeResponse>() {
+        Call<GetUserVehicleResponse> call = apiService.getVehicleByUserId(request);
+        call.enqueue(new Callback<GetUserVehicleResponse>() {
             @Override
-            public void onResponse(Call<GetAllEmployeeResponse> call, Response<GetAllEmployeeResponse> response) {
+            public void onResponse(Call<GetUserVehicleResponse> call, Response<GetUserVehicleResponse> response) {
                 if (response.isSuccessful()) {
                     switch (response.body().getStatusCode()) {
                         case Constants.STATUS_CODE_SUCCESS :
-                            getAllEmployeeSuccess(response.body().getData());
+                            getKendaraanListSuccess(response.body().getData());
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
                             break;
@@ -140,44 +153,51 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
             }
 
             @Override
-            public void onFailure(Call<GetAllEmployeeResponse> call, Throwable t) {
+            public void onFailure(Call<GetUserVehicleResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(KaryawanActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(KendaraanActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
             }
         });
     }
 
-    private void getAllEmployeeSuccess(ArrayList<GetAllEmployeeResponse.Data> dataArrayList) {
+    private void getKendaraanListSuccess(ArrayList<GetUserVehicleResponse.Data> dataArrayList) {
         if (dataArrayList.size() > 0) {
-            for (GetAllEmployeeResponse.Data data : dataArrayList) {
-                int userId = data.getUserId();
+            for (GetUserVehicleResponse.Data data : dataArrayList) {
+                int kendaraanId = data.getKendaraanId();
+                String nomorRegistrasi = data.getNomorRegistrasi();
                 String nama = data.getNama();
-                String email = data.getEmail();
+                String alamat = data.getAlamat();
+                String merk = data.getMerk();
+                String type = data.getType();
+                String tahunPembuatan = data.getTahunPembuatan();
+                String nomorRangka = data.getNomorRangka();
+                String nomorMesin = data.getNomorMesin();
+                String vehicleType = data.getVehicleType();
 
-                Karyawan karyawan = new Karyawan(userId, email, nama);
-                karyawanArrayList.add(karyawan);
+                Kendaraan kendaraan = new Kendaraan(kendaraanId, nomorRegistrasi, nama, alamat, merk, type, tahunPembuatan, nomorRangka, nomorMesin, vehicleType);
+                kendaraanArrayList.add(kendaraan);
             }
-            adapter.setKaryawanArrayList(karyawanArrayList);
+            adapter.updateKendaraanArrayList(kendaraanArrayList);
         } else {
-            Toast.makeText(KaryawanActivity.this, getString(R.string.data_empty), Toast.LENGTH_LONG).show();
+            Toast.makeText(KendaraanActivity.this, getString(R.string.data_empty), Toast.LENGTH_LONG).show();
         }
         SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
     }
 
-    public void hapusEmployee(int employeeId) {
-        progressDialog = new ProgressDialog(KaryawanActivity.this);
+    public void hapusKendaraan(int kendaraanId) {
+        progressDialog = new ProgressDialog(KendaraanActivity.this);
         progressDialog.setMessage("Sedang Diproses...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        DeleteEmployeeRequest request = new DeleteEmployeeRequest(Model.getUser().getUserId(), employeeId);
+        DeleteVehicleRequest request = new DeleteVehicleRequest(Model.getUser().getUserId(), kendaraanId);
 
         APIService apiService = HTTPClient.getClient().create(APIService.class);
-        Call<DeleteEmployeeResponse> call = apiService.deleteEmployee(request);
-        call.enqueue(new Callback<DeleteEmployeeResponse>() {
+        Call<DeleteVehicleResponse> call = apiService.deleteVehicle(request);
+        call.enqueue(new Callback<DeleteVehicleResponse>() {
             @Override
-            public void onResponse(Call<DeleteEmployeeResponse> call, Response<DeleteEmployeeResponse> response) {
+            public void onResponse(Call<DeleteVehicleResponse> call, Response<DeleteVehicleResponse> response) {
                 if (response.isSuccessful()) {
                     switch (response.body().getStatusCode()) {
                         case Constants.STATUS_CODE_DELETED :
@@ -196,7 +216,7 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
             }
 
             @Override
-            public void onFailure(Call<DeleteEmployeeResponse> call, Throwable t) {
+            public void onFailure(Call<DeleteVehicleResponse> call, Throwable t) {
                 t.printStackTrace();
                 showToast(getString(R.string.connection_error));
             }
@@ -216,6 +236,6 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
 
     private void showToast(String message) {
         progressDialog.dismiss();
-        Toast.makeText(KaryawanActivity.this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(KendaraanActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

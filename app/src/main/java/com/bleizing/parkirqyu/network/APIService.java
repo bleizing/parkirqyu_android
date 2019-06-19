@@ -25,4 +25,16 @@ public interface APIService {
 
     @POST("admin/employee/delete")
     Call<DeleteEmployeeResponse> deleteEmployee(@Body DeleteEmployeeRequest request);
+
+    @POST("admin/vehicle/get_by_user_id")
+    Call<GetUserVehicleResponse> getVehicleByUserId(@Body GetKendaraanByUserRequest request);
+
+    @POST("admin/vehicle/create")
+    Call<AddVehicleResponse> addVehicle(@Body AddVehicleRequest request);
+
+    @POST("admin/vehicle/edit")
+    Call<EditVehicleResponse> editVehicle(@Body EditVehicleRequest request);
+
+    @POST("admin/vehicle/delete")
+    Call<DeleteVehicleResponse> deleteVehicle(@Body DeleteVehicleRequest request);
 }

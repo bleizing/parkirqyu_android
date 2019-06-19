@@ -299,7 +299,7 @@ public class KaryawanFormActivity extends AppCompatActivity {
                     switch (response.body().getStatusCode()) {
                         case Constants.STATUS_CODE_CREATED :
                             showToast(getString(R.string.add_data_success));
-                            finish();
+                            onBackPressed();
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
                             if (response.body().getData().getErrorList() != null) {

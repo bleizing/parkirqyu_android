@@ -29,16 +29,16 @@ public class Kendaraan implements Parcelable {
     }
 
     protected Kendaraan(Parcel in) {
-        this.kendaraanId = in.readInt();
-        this.nomorRegistrasi = in.readString();
-        this.nama = in.readString();
-        this.alamat = in.readString();
-        this.merk = in.readString();
-        this.type = in.readString();
-        this.tahunPembuatan = in.readString();
-        this.nomorRangka = in.readString();
-        this.nomorMesin = in.readString();
-        this.vehicleType = in.readString();
+        kendaraanId = in.readInt();
+        nomorRegistrasi = in.readString();
+        nama = in.readString();
+        alamat = in.readString();
+        merk = in.readString();
+        type = in.readString();
+        tahunPembuatan = in.readString();
+        nomorRangka = in.readString();
+        nomorMesin = in.readString();
+        vehicleType = in.readString();
     }
 
     public static final Creator<Kendaraan> CREATOR = new Creator<Kendaraan>() {
@@ -123,6 +123,14 @@ public class Kendaraan implements Parcelable {
 
     public String getVehicleType() {
         return vehicleType;
+    }
+
+    public int getKendaraanId() {
+        return kendaraanId;
+    }
+
+    public void setKendaraanId(int kendaraanId) {
+        this.kendaraanId = kendaraanId;
     }
 
     @Override

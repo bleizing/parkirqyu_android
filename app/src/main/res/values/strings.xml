@@ -28,4 +28,13 @@
     <string name="konfirmasi_batal">Batal</string>
     <string name="delete_data_success">Menghapus Data Berhasil</string>
     <string name="hapus">Hapus</string>
+    <string name="hint_nomor_registrasi">Nomor Registrasi</string>
+    <string name="hint_nama_pemilik">Nama Pemilik</string>
+    <string name="hint_merk">Merk</string>
+    <string name="hint_type">Type</string>
+    <string name="mobil">Mobil</string>
+    <string name="motor">Motor</string>
+    <string name="hint_tahun_pembuatan">Tahun Pembuatan</string>
+    <string name="hint_nomor_rangka">Nomor Rangka</string>
+    <string name="hint_nomor_mesin">Nomor Mesin</string>
 </resources>
