@@ -1,7 +1,9 @@
 package com.bleizing.parkirqyu;
 
 public class Constants {
-    public static final String BASE_URL = "https://parkirqyu.bleizing.com/api/";
+    public static final String BASE_URL = "https://parkirqyu.bleizing.com/";
+    public static final String BASE_URL_API = BASE_URL + "api/";
+    public static final String BASE_URL_BARCODE = BASE_URL + "vehicles/";
 
     public static final int STATUS_CODE_SUCCESS = 200;
     public static final int STATUS_CODE_CREATED = 201;
@@ -18,4 +20,6 @@ public class Constants {
     public static final String PREF_ALAMAT = "alamat";
     public static final String PREF_SALDO = "saldo";
     public static final String PREF_USER_TYPE = "user_type";
+
+    public static final int PERMISSION_WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 690;
 }

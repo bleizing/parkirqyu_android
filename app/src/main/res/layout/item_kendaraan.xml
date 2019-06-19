@@ -80,7 +80,8 @@
         android:layout_marginLeft="@dimen/_50sdp"
         android:layout_marginStart="@dimen/_50sdp"
         android:layout_marginRight="@dimen/_50sdp"
-        android:layout_marginEnd="@dimen/_50sdp">
+        android:layout_marginEnd="@dimen/_50sdp"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/btn_ubah"

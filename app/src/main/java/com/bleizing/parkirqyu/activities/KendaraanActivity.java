@@ -128,7 +128,7 @@ public class KendaraanActivity extends AppCompatActivity implements SwipeRefresh
 
         rvKendaraan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvKendaraan.setItemAnimator(new DefaultItemAnimator());
-        adapter = new KendaraanAdapter(this, kendaraanArrayList);
+        adapter = new KendaraanAdapter(this, kendaraanArrayList, 2);
         rvKendaraan.setAdapter(adapter);
     }
 

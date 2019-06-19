@@ -26,7 +26,7 @@ public class HTTPClient {
             builder.addInterceptor(loggingInterceptor);
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
+                    .baseUrl(Constants.BASE_URL_API)
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(builder.build())

@@ -20,6 +20,7 @@ import com.bleizing.parkirqyu.activities.KaryawanFormActivity;
 import com.bleizing.parkirqyu.activities.KendaraanActivity;
 import com.bleizing.parkirqyu.activities.KendaraanDetailActivity;
 import com.bleizing.parkirqyu.activities.KendaraanFormActivity;
+import com.bleizing.parkirqyu.activities.MainActivity;
 import com.bleizing.parkirqyu.models.Kendaraan;
 import com.bleizing.parkirqyu.models.Model;
 
@@ -31,9 +32,12 @@ public class KendaraanAdapter extends RecyclerView.Adapter<KendaraanAdapter.View
 
     private ArrayList<Kendaraan> kendaraanArrayList;
 
-    public KendaraanAdapter(Context context, ArrayList<Kendaraan> kendaraanArrayList) {
+    private int type;       // 1 = Own Kendaraan, 2 = Karyawan Kendaraan
+
+    public KendaraanAdapter(Context context, ArrayList<Kendaraan> kendaraanArrayList, int type) {
         this.context = context;
         this.kendaraanArrayList = kendaraanArrayList;
+        this.type = type;
     }
 
     @NonNull
@@ -51,10 +55,10 @@ public class KendaraanAdapter extends RecyclerView.Adapter<KendaraanAdapter.View
         viewHolder.tvKendaraanType.setText(kendaraan.getVehicleType());
         viewHolder.tvKendaraanMerk.setText(kendaraan.getMerk());
 
-        if (Model.getUser().getUserType() == 1) {
-            viewHolder.llItemKendaraanAdmin.setVisibility(View.VISIBLE);
-        } else if (Model.getUser().getUserType() == 2) {
+        if (type == 1) {
             viewHolder.btnLihatBarcode.setVisibility(View.VISIBLE);
+        } else if (type == 2) {
+            viewHolder.llItemKendaraanAdmin.setVisibility(View.VISIBLE);
         }
 
         viewHolder.llItemKendaraan.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +75,7 @@ public class KendaraanAdapter extends RecyclerView.Adapter<KendaraanAdapter.View
         viewHolder.btnLihatBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Lihat Barcode " + kendaraan.getNomorRegistrasi(), Toast.LENGTH_LONG).show();
+                ((MainActivity) context).showBarcode(kendaraan.getNomorRegistrasi());
             }
         });
 
