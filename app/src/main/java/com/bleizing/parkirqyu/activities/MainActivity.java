@@ -68,33 +68,47 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
     private KendaraanAdapter kendaraanAdapter;
 
-    private LinearLayout llKaryawan;
     private LinearLayout llKendaraanParkir;
     private LinearLayout llKendaraan;
-
-    private Button btnBertugas;
-
-    private TextView tvLogout;
-
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        user = Model.getUser();
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(refreshListener);
         refreshListener.onRefresh();
 
-        llKaryawan = (LinearLayout) findViewById(R.id.ll_karyawan);
+        LinearLayout llKaryawan = (LinearLayout) findViewById(R.id.ll_karyawan);
         llKendaraanParkir = (LinearLayout) findViewById(R.id.ll_kendaraan_parkir);
         llKendaraan = (LinearLayout) findViewById(R.id.ll_kendaraan);
-        btnBertugas = (Button) findViewById(R.id.btn_bertugas);
+        Button btnBertugas = (Button) findViewById(R.id.btn_bertugas);
+        Button btnCheckin = (Button) findViewById(R.id.btn_checkin);
 
-        tvLogout = (TextView) findViewById(R.id.tv_logout);
+        btnCheckin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ParkirScannerActivity.class);
+                intent.putExtra("type", 1);
+                startActivity(intent);
+            }
+        });
+
+        btnBertugas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ParkirScannerActivity.class);
+                intent.putExtra("type", 2);
+                startActivity(intent);
+            }
+        });
+
+        if (Model.getUser().getUserType() == 1) {
+            btnCheckin.setVisibility(View.VISIBLE);
+        }
+
+        TextView tvLogout = (TextView) findViewById(R.id.tv_logout);
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,10 +140,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             }
         });
 
-        if (user.getUserType() == 2) {
+        if (Model.getUser().getUserType() == 2) {
             btnBertugas.setVisibility(View.VISIBLE);
-        } else if (user.getUserType() == 1) {
+        } else if (Model.getUser().getUserType() == 1) {
             llKaryawan.setVisibility(View.VISIBLE);
+            btnCheckin.setVisibility(View.VISIBLE);
         }
 
         kendaraanArrayList = new ArrayList<>();
@@ -205,17 +220,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         RecyclerView rvKendaraan = (RecyclerView) findViewById(R.id.kendaraan_recycler_view);
         rvKendaraan.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvKendaraan.setItemAnimator(new DefaultItemAnimator());
-        rvKendaraan.addOnItemTouchListener(new RecyclerTouchListener(this, rvKendaraan, new RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Toast.makeText(MainActivity.this, kendaraanAdapter.getKendaraanArrayList().get(position).getNomorRegistrasi() + " Clicked", Toast.LENGTH_LONG).show();
-            }
 
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
         kendaraanAdapter = new KendaraanAdapter(this, kendaraanArrayList, 1);
         rvKendaraan.setAdapter(kendaraanAdapter);
     }
@@ -224,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         if (kendaraanArrayList != null && kendaraanArrayList.size() > 0) {
             kendaraanArrayList.clear();
         }
-        BaseRequest baseRequest = new BaseRequest(user.getUserId());
+        BaseRequest baseRequest = new BaseRequest(Model.getUser().getUserId());
         APIService apiService = HTTPClient.getClient().create(APIService.class);
         Call<GetUserVehicleResponse> call = apiService.getUserVehicle(baseRequest);
         call.enqueue(new Callback<GetUserVehicleResponse>() {
@@ -280,6 +285,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         if (hasPermission()) {
             String imgUrl = Constants.BASE_URL_BARCODE + nomorRegistrasi + ".png";
 
+            Log.d(TAG, "imgUrl = " + imgUrl);
+
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_barcode, null);
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setView(view);
@@ -311,8 +318,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG, "onBitmapLoaded");
                         final File myImageFile = new File(directory, imageName); // Create image file
+                        Log.d(TAG, "myImageFile = " + myImageFile);
                         if (!myImageFile.exists()) {
+                            Log.d(TAG, "!myImageFile.exists()");
                             FileOutputStream fos = null;
                             try {
                                 fos = new FileOutputStream(myImageFile);
@@ -330,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d(TAG, "myImageFile = " + myImageFile);
                                 Picasso.with(MainActivity.this).load(myImageFile).resize(800, 800).centerInside().into(imageView);
                             }
                         });

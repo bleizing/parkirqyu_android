@@ -66,7 +66,9 @@ public class KendaraanAdapter extends RecyclerView.Adapter<KendaraanAdapter.View
             public void onClick(View v) {
                 Intent intent = new Intent(context, KendaraanDetailActivity.class);
                 intent.putExtra("kendaraan", kendaraan);
-                intent.putExtra("karyawan", ((KendaraanActivity) context).karyawan);
+                if (type == 2) {
+                    intent.putExtra("karyawan", ((KendaraanActivity) context).karyawan);
+                }
                 context.startActivity(intent);
                 ((KendaraanActivity)context).finish();
             }

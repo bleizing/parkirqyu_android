@@ -37,4 +37,7 @@ public interface APIService {
 
     @POST("admin/vehicle/delete")
     Call<DeleteVehicleResponse> deleteVehicle(@Body DeleteVehicleRequest request);
+
+    @POST("parkir/check_in")
+    Call<ProcessCheckInResponse> processCheckIn(@Body ProcessCheckInRequest request);
 }

@@ -228,6 +228,20 @@
                 android:visibility="gone"
                 android:text="Mulai Bertugas Menjaga Pintu Keluar"/>
 
+            <Button
+                android:id="@+id/btn_checkin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:visibility="gone"
+                android:text="Check In Parkir"
+                android:textSize="@dimen/_13ssp"/>
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

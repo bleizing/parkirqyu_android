@@ -124,8 +124,11 @@ public class KendaraanDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(KendaraanDetailActivity.this, KendaraanActivity.class);
-        intent.putExtra("karyawan", karyawan);
+        Intent intent = new Intent(KendaraanDetailActivity.this, MainActivity.class);
+        if (karyawan != null) {
+            intent = new Intent(KendaraanDetailActivity.this, KendaraanActivity.class);
+            intent.putExtra("karyawan", karyawan);
+        }
         startActivity(intent);
         finish();
     }

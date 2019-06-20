@@ -22,4 +22,5 @@ public class Constants {
     public static final String PREF_USER_TYPE = "user_type";
 
     public static final int PERMISSION_WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 690;
+    public static final int PERMISSION_CAMERA_REQUEST_CODE = 691;
 }
