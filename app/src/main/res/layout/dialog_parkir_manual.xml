@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/_10sdp"
-        android:text="Check In Parkir Manual"
+        android:text="Parkir Manual"
         android:textSize="@dimen/_14ssp"/>
 
     <LinearLayout
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_nomor_registrasi"
-                android:inputType="text" />
+                android:inputType="textCapCharacters" />
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout

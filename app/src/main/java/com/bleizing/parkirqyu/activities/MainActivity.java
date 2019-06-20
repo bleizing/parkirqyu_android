@@ -285,8 +285,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         if (hasPermission()) {
             String imgUrl = Constants.BASE_URL_BARCODE + nomorRegistrasi + ".png";
 
-            Log.d(TAG, "imgUrl = " + imgUrl);
-
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_barcode, null);
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setView(view);
@@ -311,18 +309,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
     private Target picassoImageTarget(Context context, final String imageDir, final String imageName, final ImageView imageView) {
         ContextWrapper cw = new ContextWrapper(context);
-        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
+        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE);
         return new Target() {
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onBitmapLoaded");
-                        final File myImageFile = new File(directory, imageName); // Create image file
-                        Log.d(TAG, "myImageFile = " + myImageFile);
+                        final File myImageFile = new File(directory, imageName);
                         if (!myImageFile.exists()) {
-                            Log.d(TAG, "!myImageFile.exists()");
                             FileOutputStream fos = null;
                             try {
                                 fos = new FileOutputStream(myImageFile);
@@ -340,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(TAG, "myImageFile = " + myImageFile);
                                 Picasso.with(MainActivity.this).load(myImageFile).resize(800, 800).centerInside().into(imageView);
                             }
                         });

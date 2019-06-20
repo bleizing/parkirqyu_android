@@ -38,9 +38,10 @@
     <string name="hint_nomor_rangka">Nomor Rangka</string>
     <string name="hint_nomor_mesin">Nomor Mesin</string>
     <string name="hint_masuk">Masuk</string>
-    <string name="masuk">Masuk</string>
     <string name="btn_masuk">Masuk</string>
     <string name="btn_batal">Batal</string>
     <string name="btn_proses">Proses</string>
     <string name="btn_ok">Oke</string>
+    <string name="btn_bayar_manual">Bayar Manual</string>
+    <string name="btn_bayar">Bayar</string>
 </resources>

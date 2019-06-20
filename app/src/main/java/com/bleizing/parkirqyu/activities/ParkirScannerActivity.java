@@ -14,9 +14,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -33,6 +34,8 @@ import com.bleizing.parkirqyu.network.APIService;
 import com.bleizing.parkirqyu.network.HTTPClient;
 import com.bleizing.parkirqyu.network.ProcessCheckInRequest;
 import com.bleizing.parkirqyu.network.ProcessCheckInResponse;
+import com.bleizing.parkirqyu.network.ProcessPreCheckOutRequest;
+import com.bleizing.parkirqyu.network.ProcessPreCheckOutResponse;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.core.IViewFinder;
@@ -53,12 +56,20 @@ public class ParkirScannerActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private AlertDialog dialogCheckin;
+    private AlertDialog dialogManual;
+
+    private EditText editNomorRegistrasi;
+
+    private RadioGroup rgJenisKendaraan;
+
+    private View viewDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkir_scanner);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
@@ -69,9 +80,12 @@ public class ParkirScannerActivity extends AppCompatActivity {
     private ZXingScannerView.ResultHandler resultHandler = new ZXingScannerView.ResultHandler() {
         @Override
         public void handleResult(Result result) {
-            Log.d(TAG, "Result = " + result.getText());
             vehicleType = 0;
-            prosesCheckin(result.getText(), true);
+            if (type == 1) {
+                prosesCheckin(result.getText(), true);
+            } else {
+                prosesPreCheckout(result.getText(), true);
+            }
         }
     };
 
@@ -79,14 +93,11 @@ public class ParkirScannerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (hasPermission()) {
-            Log.d(TAG, "hasPermission");
             if (scannerView == null) {
-                Log.d(TAG, "scannerView == null");
                 initView();
             }
             scannerView.startCamera(1);
         } else {
-            Log.d(TAG, "!hasPermission");
             requestPermission();
         }
     }
@@ -177,9 +188,15 @@ public class ParkirScannerActivity extends AppCompatActivity {
 
         frameLayout.addView(scannerView);
 
-        dialogCheckin = new AlertDialog.Builder(ParkirScannerActivity.this).create();
+        dialogManual = new AlertDialog.Builder(ParkirScannerActivity.this).create();
+
+        viewDialog = LayoutInflater.from(ParkirScannerActivity.this).inflate(R.layout.dialog_parkir_manual, null);
 
         final Button btnManual = (Button) findViewById(R.id.btn_manual);
+
+        editNomorRegistrasi = (EditText) viewDialog.findViewById(R.id.edit_nomor_registrasi);
+
+        rgJenisKendaraan = (RadioGroup) viewDialog.findViewById(R.id.rg_jenis_kendaraan);
 
         if (type == 1) {
             btnManual.setText("Manual Check In");
@@ -190,20 +207,18 @@ public class ParkirScannerActivity extends AppCompatActivity {
         btnManual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View view = LayoutInflater.from(ParkirScannerActivity.this).inflate(R.layout.dialog_checkin_manual, null);
-                dialogCheckin.setView(view);
+                editNomorRegistrasi.setText("");
+                rgJenisKendaraan.check(R.id.rb_mobil);
 
-                LinearLayout llJenisKendaraan = (LinearLayout) view.findViewById(R.id.ll_jenis_kendaraan);
+                dialogManual.setView(viewDialog);
+
+                LinearLayout llJenisKendaraan = (LinearLayout) viewDialog.findViewById(R.id.ll_jenis_kendaraan);
 
                 if (type == 1) {
                     llJenisKendaraan.setVisibility(View.VISIBLE);
                 }
 
-                final EditText editNomorRegistrasi = (EditText) view.findViewById(R.id.edit_nomor_registrasi);
-
-                final RadioGroup rgJenisKendaraan = (RadioGroup) view.findViewById(R.id.rg_jenis_kendaraan);
-
-                Button btnProses = (Button) view.findViewById(R.id.btn_proses);
+                Button btnProses = (Button) viewDialog.findViewById(R.id.btn_proses);
                 btnProses.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -217,7 +232,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
                         if (type == 1) {
                             int selectedJenisKendaraan = rgJenisKendaraan.getCheckedRadioButtonId();
 
-                            RadioButton rbJenisKendaraan = (RadioButton) view.findViewById(selectedJenisKendaraan);
+                            RadioButton rbJenisKendaraan = (RadioButton) viewDialog.findViewById(selectedJenisKendaraan);
 
                             vehicleType = 1;
 
@@ -227,23 +242,24 @@ public class ParkirScannerActivity extends AppCompatActivity {
 
                             prosesCheckin(nomorRegistasi, false);
                         } else {
-                            prosesCheckout(nomorRegistasi);
+                            prosesPreCheckout(nomorRegistasi, false);
                         }
+
+                        hideKeyboard(viewDialog);
                     }
                 });
 
-                Button btnBatal = (Button) view.findViewById(R.id.btn_batal);
+                Button btnBatal = (Button) viewDialog.findViewById(R.id.btn_batal);
                 btnBatal.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        editNomorRegistrasi.setText("");
-                        rgJenisKendaraan.check(R.id.rb_mobil);
+                        dialogManual.dismiss();
 
-                        dialogCheckin.dismiss();
+                        hideKeyboard(viewDialog);
                     }
                 });
 
-                dialogCheckin.show();
+                dialogManual.show();
             }
         });
     }
@@ -266,7 +282,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
                             processCheckinResponse("Check in berhasil. Silahkan masuk.", true, fromScanner);
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
-                            processCheckinResponse("Check in gagal. Harap hubungi petugas.", false, fromScanner);
+                            processCheckinResponse("Mohon maaf, check in gagal. Harap hubungi petugas.", false, fromScanner);
                             break;
                     }
                 }
@@ -279,13 +295,6 @@ public class ParkirScannerActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
-    }
-
-    private void prosesCheckout(String nomorRegistrasi) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Mohon Tunggu...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
     }
 
     private void processCheckinResponse(String message, final boolean isSuccess, final boolean fromScanner) {
@@ -303,8 +312,10 @@ public class ParkirScannerActivity extends AppCompatActivity {
                 dialog.dismiss();
                 if (isSuccess) {
                     if (!fromScanner) {
-                        dialogCheckin.dismiss();
+                        dialogManual.dismiss();
                     }
+                    editNomorRegistrasi.setText("");
+                    rgJenisKendaraan.check(R.id.rb_mobil);
                     scannerView.resumeCameraPreview(resultHandler);
                 } else {
                     if (fromScanner) {
@@ -317,5 +328,70 @@ public class ParkirScannerActivity extends AppCompatActivity {
         progressDialog.dismiss();
 
         dialog.show();
+    }
+
+    private void prosesPreCheckout(String nomorRegistrasi, final boolean fromScanner) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Mohon Tunggu...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        ProcessPreCheckOutRequest request = new ProcessPreCheckOutRequest(Model.getUser().getUserId(), nomorRegistrasi);
+        APIService apiService = HTTPClient.getClient().create(APIService.class);
+        Call<ProcessPreCheckOutResponse> call = apiService.processPreCheckOut(request);
+        call.enqueue(new Callback<ProcessPreCheckOutResponse>() {
+            @Override
+            public void onResponse(Call<ProcessPreCheckOutResponse> call, Response<ProcessPreCheckOutResponse> response) {
+                if (response.isSuccessful()) {
+                    switch (response.body().getStatusCode()) {
+                        case Constants.STATUS_CODE_SUCCESS :
+                            Intent intent = new Intent(ParkirScannerActivity.this, CheckOutActivity.class);
+                            intent.putExtra("data", response.body().getData());
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case Constants.STATUS_CODE_BAD_REQUEST :
+                            processPreCheckoutFailed(fromScanner);
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProcessPreCheckOutResponse> call, Throwable t) {
+                Toast.makeText(ParkirScannerActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void processPreCheckoutFailed(final boolean fromScanner) {
+        final View view = LayoutInflater.from(ParkirScannerActivity.this).inflate(R.layout.dialog_precheckout_failed, null);
+        final AlertDialog dialog = new AlertDialog.Builder(ParkirScannerActivity.this).create();
+        dialog.setView(view);
+
+        Button btnOk = (Button) view.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (fromScanner) {
+                    editNomorRegistrasi.setText("");
+                    scannerView.resumeCameraPreview(resultHandler);
+                }
+            }
+        });
+
+        progressDialog.dismiss();
+
+        dialog.show();
+    }
+
+    private void hideKeyboard(View view) {
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch(Exception ignored) {
+        }
     }
 }

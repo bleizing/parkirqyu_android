@@ -40,4 +40,10 @@ public interface APIService {
 
     @POST("parkir/check_in")
     Call<ProcessCheckInResponse> processCheckIn(@Body ProcessCheckInRequest request);
+
+    @POST("parkir/pre_check_out")
+    Call<ProcessPreCheckOutResponse> processPreCheckOut(@Body ProcessPreCheckOutRequest request);
+
+    @POST("parkir/check_out")
+    Call<ProcessCheckOutResponse> processCheckOut(@Body ProcessCheckOutRequest request);
 }
