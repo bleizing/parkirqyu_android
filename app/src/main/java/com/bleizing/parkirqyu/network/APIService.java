@@ -46,4 +46,7 @@ public interface APIService {
 
     @POST("parkir/check_out")
     Call<ProcessCheckOutResponse> processCheckOut(@Body ProcessCheckOutRequest request);
+
+    @POST("topup/topup")
+    Call<ProcessTopupResponse> processTopup(@Body ProcessTopupRequest request);
 }

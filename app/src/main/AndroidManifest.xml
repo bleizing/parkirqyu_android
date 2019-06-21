@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:configChanges="keyboardHidden|orientation"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
@@ -20,20 +20,36 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".activities.CheckOutActivity"
+        <activity android:name=".activities.TopupActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity
+            android:name=".activities.CheckOutActivity"
+            android:theme="@style/ParkirqyuTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.ParkirScannerActivity"
+        <activity
+            android:name=".activities.ParkirScannerActivity"
+            android:theme="@style/ParkirqyuTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.KendaraanDetailActivity" />
+        <activity
+            android:name=".activities.KendaraanDetailActivity"
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KendaraanFormActivity"
+            android:theme="@style/ParkirqyuTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.KendaraanActivity" />
-        <activity android:name=".activities.KaryawanDetailActivity" />
+        <activity
+            android:name=".activities.KendaraanActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity
+            android:name=".activities.KaryawanDetailActivity"
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KaryawanFormActivity"
+            android:theme="@style/ParkirqyuTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.KaryawanActivity" />
+        <activity
+            android:name=".activities.KaryawanActivity"
+            android:theme="@style/ParkirqyuTheme" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,8 +57,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:theme="@style/ParkirqyuTheme" />
     </application>
 
 </manifest>

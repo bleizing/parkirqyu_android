@@ -44,4 +44,6 @@
     <string name="btn_ok">Oke</string>
     <string name="btn_bayar_manual">Bayar Manual</string>
     <string name="btn_bayar">Bayar</string>
+    <string name="hint_nominal">Nominal</string>
+    <string name="btn_topup">Topup</string>
 </resources>

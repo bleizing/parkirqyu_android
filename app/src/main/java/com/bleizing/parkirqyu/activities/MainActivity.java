@@ -46,6 +46,21 @@ import com.bleizing.parkirqyu.network.GetUserVehicleResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
 import com.bleizing.parkirqyu.utils.PrefUtils;
 import com.bleizing.parkirqyu.utils.SwipeRefreshUtils;
+import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.core.LocalDataHandler;
+import com.midtrans.sdk.corekit.core.MidtransSDK;
+import com.midtrans.sdk.corekit.core.SdkCoreFlowBuilder;
+import com.midtrans.sdk.corekit.core.TransactionRequest;
+import com.midtrans.sdk.corekit.core.UIKitCustomSetting;
+import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
+import com.midtrans.sdk.corekit.models.BankType;
+import com.midtrans.sdk.corekit.models.BillInfoModel;
+import com.midtrans.sdk.corekit.models.CustomerDetails;
+import com.midtrans.sdk.corekit.models.UserAddress;
+import com.midtrans.sdk.corekit.models.UserDetail;
+import com.midtrans.sdk.corekit.models.snap.CreditCard;
+import com.midtrans.sdk.corekit.models.snap.TransactionResult;
+import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -57,6 +72,11 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bleizing.parkirqyu.Constants.BASE_URL;
+import static com.midtrans.sdk.corekit.core.Constants.ADDRESS_TYPE_BILLING;
+import static com.midtrans.sdk.corekit.core.Constants.ADDRESS_TYPE_BOTH;
+import static com.midtrans.sdk.corekit.core.Constants.ADDRESS_TYPE_SHIPPING;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils.SwipeRefreshUtilsListener {
     private static final String TAG = "MainActivity";
@@ -76,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUser();
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(refreshListener);
         refreshListener.onRefresh();
@@ -85,6 +107,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         llKendaraan = (LinearLayout) findViewById(R.id.ll_kendaraan);
         Button btnBertugas = (Button) findViewById(R.id.btn_bertugas);
         Button btnCheckin = (Button) findViewById(R.id.btn_checkin);
+
+        TextView tvTopup = (TextView) findViewById(R.id.tv_topup);
+        tvTopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TopupActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         if (hasPermission()) {
             String imgUrl = Constants.BASE_URL_BARCODE + nomorRegistrasi + ".png";
 
+            Log.d(TAG, "imgUrl = " + imgUrl);
+
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_barcode, null);
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setView(view);
@@ -316,8 +349,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG, "onBitmapLoaded");
                         final File myImageFile = new File(directory, imageName);
                         if (!myImageFile.exists()) {
+                            Log.d(TAG, "!myImageFile.exists()");
                             FileOutputStream fos = null;
                             try {
                                 fos = new FileOutputStream(myImageFile);
@@ -335,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d(TAG, "loaded from >> " + myImageFile.getAbsolutePath());
                                 Picasso.with(MainActivity.this).load(myImageFile).resize(800, 800).centerInside().into(imageView);
                             }
                         });
@@ -344,9 +380,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
+                Log.d(TAG, "onBitmapFailed");
             }
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.d(TAG, "onPrepareLoad");
                 if (placeHolderDrawable != null) {}
             }
         };
@@ -364,5 +402,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.PERMISSION_WRITE_EXTERNAL_STORAGE_REQUEST_CODE );
+    }
+
+    private void initUser() {
+        if (Model.getUser() == null) {
+            PrefUtils prefUtils = new PrefUtils(this);
+
+            if (prefUtils.isLoggedIn()) {
+                int userId = prefUtils.getUserId();
+                String nama = prefUtils.getNama();
+                String jenisKelamin = prefUtils.getJenisKelamin();
+                String tempatLahir = prefUtils.getTempatLahir();
+                String tanggalLahir = prefUtils.getTanggalLahir();
+                String alamat = prefUtils.getAlamat();
+                String saldo = prefUtils.getSaldo();
+                int userType = prefUtils.getUserType();
+
+                User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+                Model.setUser(user);
+            }
+        }
     }
 }
