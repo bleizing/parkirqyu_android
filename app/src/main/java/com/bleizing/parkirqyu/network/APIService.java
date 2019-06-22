@@ -8,6 +8,9 @@ public interface APIService {
     @POST("user/login")
     Call<LoginResponse> processLogin(@Body LoginRequest loginRequest);
 
+    @POST("user/get_user_info")
+    Call<LoginResponse> getUserInfo(@Body BaseRequest request);
+
     @POST("user/get_user_vehicle")
     Call<GetUserVehicleResponse> getUserVehicle(@Body BaseRequest baseRequest);
 

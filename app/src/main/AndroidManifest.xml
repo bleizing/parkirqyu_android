@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="false"
+        android:largeHeap="true"
         android:configChanges="keyboardHidden|orientation"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"

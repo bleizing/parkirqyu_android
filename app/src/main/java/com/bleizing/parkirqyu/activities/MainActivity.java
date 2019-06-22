@@ -44,6 +44,7 @@ import com.bleizing.parkirqyu.network.APIService;
 import com.bleizing.parkirqyu.network.BaseRequest;
 import com.bleizing.parkirqyu.network.GetUserVehicleResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
+import com.bleizing.parkirqyu.network.LoginResponse;
 import com.bleizing.parkirqyu.utils.PrefUtils;
 import com.bleizing.parkirqyu.utils.SwipeRefreshUtils;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
@@ -68,6 +69,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,10 +94,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     private LinearLayout llKendaraanParkir;
     private LinearLayout llKendaraan;
 
+    private TextView tvNama;
+    private TextView tvSaldo;
+
+    private PrefUtils prefUtils;
+
+    private boolean userLoading = false;
+    private boolean kendaraanLoading = false;
+    private boolean kendaraanParkirLoading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        prefUtils = new PrefUtils(this);
+
+        tvNama = (TextView) findViewById(R.id.tv_nama);
+        tvSaldo = (TextView) findViewById(R.id.tv_saldo);
 
         initUser();
 
@@ -114,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TopupActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -143,17 +161,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrefUtils prefUtils = new PrefUtils(MainActivity.this);
-
-                prefUtils.setLoggedIn(false);
-                prefUtils.setUserId(0);
-                prefUtils.setNama("");
-                prefUtils.setJenisKelamin("");
-                prefUtils.setTempatLahir("");
-                prefUtils.setTanggalLahir("");
-                prefUtils.setAlamat("");
-                prefUtils.setSaldo("");
-                prefUtils.setUserType(0);
+                prefUtils.clearUser();
 
                 Model.setUser(null);
 
@@ -256,6 +264,49 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         rvKendaraan.setAdapter(kendaraanAdapter);
     }
 
+    private void getUserInfo() {
+        userLoading = true;
+        BaseRequest baseRequest = new BaseRequest(Model.getUser().getUserId());
+
+        APIService apiService = HTTPClient.getClient().create(APIService.class);
+        Call<LoginResponse> call = apiService.getUserInfo(baseRequest);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body().getStatusCode() == Constants.STATUS_CODE_SUCCESS) {
+                    getUserInfoSuccess(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getUserInfoSuccess(LoginResponse.Data data) {
+        int userId = data.getUserId();
+        String nama = data.getNama();
+        String email = data.getEmail();
+        String jenisKelamin = data.getJenisKelamin();
+        String tempatLahir = data.getTempatLahir();
+        String tanggalLahir = data.getTanggalLahir();
+        String alamat = data.getAlamat();
+        String saldo = data.getSaldo();
+        int userType = data.getUserType();
+
+        User user = new User(userId, nama, email, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+        Model.setUser(user);
+
+        prefUtils.saveUser(user);
+
+        userLoading = false;
+        setUserView();
+
+        hideRefresh();
+    }
+
     private void getKendaraanList() {
         if (kendaraanArrayList != null && kendaraanArrayList.size() > 0) {
             kendaraanArrayList.clear();
@@ -309,12 +360,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         } else {
             llKendaraan.setVisibility(View.GONE);
         }
-        SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
+        kendaraanLoading = false;
+        hideRefresh();
     }
 
     public void showBarcode(String nomorRegistrasi) {
         if (hasPermission()) {
-            String imgUrl = Constants.BASE_URL_BARCODE + nomorRegistrasi + ".png";
+            String imageName = nomorRegistrasi + ".png";
+
+            String imgUrl = Constants.BASE_URL_BARCODE + imageName;
 
             Log.d(TAG, "imgUrl = " + imgUrl);
 
@@ -333,7 +387,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                 }
             });
             ImageView imageView = view.findViewById(R.id.img_barcode);
-            Picasso.with(this).load(imgUrl).into(picassoImageTarget(getApplicationContext(), "vehicle", nomorRegistrasi, imageView));
+            Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    exception.printStackTrace();
+                }
+
+            });
+            Picasso pic = builder.build();
+            pic.load(imgUrl).into(picassoImageTarget(getApplicationContext(), "vehicle", imageName, imageView));
             dialog.show();
         } else {
             requestPermission();
@@ -343,14 +406,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     private Target picassoImageTarget(Context context, final String imageDir, final String imageName, final ImageView imageView) {
         ContextWrapper cw = new ContextWrapper(context);
         final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE);
+        final File myImageFile = new File(directory, imageName);
         return new Target() {
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                Log.d(TAG, "onBitmapLoaded");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onBitmapLoaded");
-                        final File myImageFile = new File(directory, imageName);
+                        Log.d(TAG, "run()");
                         if (!myImageFile.exists()) {
                             Log.d(TAG, "!myImageFile.exists()");
                             FileOutputStream fos = null;
@@ -371,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                             @Override
                             public void run() {
                                 Log.d(TAG, "loaded from >> " + myImageFile.getAbsolutePath());
-                                Picasso.with(MainActivity.this).load(myImageFile).resize(800, 800).centerInside().into(imageView);
+                                Picasso.get().load(myImageFile).resize(800, 800).centerInside().into(imageView);
                             }
                         });
                     }
@@ -379,9 +443,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
                 Log.d(TAG, "onBitmapFailed");
             }
+
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
                 Log.d(TAG, "onPrepareLoad");
@@ -406,21 +471,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
     private void initUser() {
         if (Model.getUser() == null) {
-            PrefUtils prefUtils = new PrefUtils(this);
-
             if (prefUtils.isLoggedIn()) {
-                int userId = prefUtils.getUserId();
-                String nama = prefUtils.getNama();
-                String jenisKelamin = prefUtils.getJenisKelamin();
-                String tempatLahir = prefUtils.getTempatLahir();
-                String tanggalLahir = prefUtils.getTanggalLahir();
-                String alamat = prefUtils.getAlamat();
-                String saldo = prefUtils.getSaldo();
-                int userType = prefUtils.getUserType();
-
-                User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+                User user = prefUtils.getUser();
                 Model.setUser(user);
+                setUserView();
             }
         }
+
+        getUserInfo();
+    }
+
+    private void hideRefresh() {
+        if (!userLoading && !kendaraanLoading) {
+            SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
+        }
+    }
+
+    private void setUserView() {
+        tvNama.setText(Model.getUser().getNama());
+        tvSaldo.setText(Model.getUser().getSaldo());
     }
 }

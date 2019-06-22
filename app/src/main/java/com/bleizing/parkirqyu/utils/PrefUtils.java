@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.bleizing.parkirqyu.Constants;
+import com.bleizing.parkirqyu.models.User;
 
 public class PrefUtils {
     private SharedPreferences pref;
@@ -31,6 +32,45 @@ public class PrefUtils {
         return pref.getBoolean(Constants.PREF_LOGGED_IN, false);
     }
 
+    public void saveUser(User user) {
+        this.setUserId(user.getUserId());
+        this.setNama(user.getNama());
+        this.setEmail(user.getEmail());
+        this.setJenisKelamin(user.getJenisKelamin());
+        this.setTempatLahir(user.getTempatLahir());
+        this.setTanggalLahir(user.getTanggalLahir());
+        this.setAlamat(user.getAlamat());
+        this.setSaldo(user.getSaldo());
+        this.setUserType(user.getUserType());
+    }
+
+    public User getUser() {
+        int userId = this.getUserId();
+        String nama = this.getNama();
+        String email = this.getEmail();
+        String jenisKelamin = this.getJenisKelamin();
+        String tempatLahir = this.getTempatLahir();
+        String tanggalLahir = this.getTanggalLahir();
+        String alamat = this.getAlamat();
+        String saldo = this.getSaldo();
+        int userType = this.getUserType();
+
+        return new User(userId, nama, email, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+    }
+
+    public void clearUser() {
+        this.setLoggedIn(false);
+        this.setUserId(0);
+        this.setNama("");
+        this.setEmail("");
+        this.setJenisKelamin("");
+        this.setTempatLahir("");
+        this.setTanggalLahir("");
+        this.setAlamat("");
+        this.setSaldo("");
+        this.setUserType(0);
+    }
+
     public void setUserId(int userId) {
         editor.putInt(Constants.PREF_USER_ID, userId);
         editor.commit();
@@ -47,6 +87,15 @@ public class PrefUtils {
 
     public String getNama() {
         return pref.getString(Constants.PREF_NAMA, "");
+    }
+
+    public void setEmail(String email) {
+        editor.putString(Constants.PREF_EMAIL, email);
+        editor.commit();
+    }
+
+    public String getEmail() {
+        return pref.getString(Constants.PREF_EMAIL, "");
     }
 
     public void setJenisKelamin(String jenisKelamin) {

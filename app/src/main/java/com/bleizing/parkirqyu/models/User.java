@@ -3,6 +3,7 @@ package com.bleizing.parkirqyu.models;
 public class User {
     private int userId;
     private String nama;
+    private String email;
     private String jenisKelamin;
     private String tempatLahir;
     private String tanggalLahir;
@@ -10,9 +11,10 @@ public class User {
     private String saldo;
     private int userType;
 
-    public User(int userId, String nama, String jenisKelamin, String tempatLahir, String tanggalLahir, String alamat, String saldo, int userType) {
+    public User(int userId, String nama, String email, String jenisKelamin, String tempatLahir, String tanggalLahir, String alamat, String saldo, int userType) {
         this.userId = userId;
         this.nama = nama;
+        this.email = email;
         this.jenisKelamin = jenisKelamin;
         this.tempatLahir = tempatLahir;
         this.tanggalLahir = tanggalLahir;
@@ -83,5 +85,13 @@ public class User {
 
     public int getUserType() {
         return userType;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

@@ -19,6 +19,10 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
         @Expose
         private String nama;
 
+        @SerializedName("email")
+        @Expose
+        private String email;
+
         @SerializedName("jenis_kelamin")
         @Expose
         private String jenisKelamin;
@@ -105,6 +109,14 @@ public class LoginResponse extends BaseResponse<LoginResponse.Data> {
 
         public int getUserType() {
             return userType;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getEmail() {
+            return email;
         }
     }
 }

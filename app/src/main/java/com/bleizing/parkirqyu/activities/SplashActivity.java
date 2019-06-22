@@ -26,16 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         if (prefUtils.isLoggedIn()) {
             intent = new Intent(SplashActivity.this, MainActivity.class);
 
-            int userId = prefUtils.getUserId();
-            String nama = prefUtils.getNama();
-            String jenisKelamin = prefUtils.getJenisKelamin();
-            String tempatLahir = prefUtils.getTempatLahir();
-            String tanggalLahir = prefUtils.getTanggalLahir();
-            String alamat = prefUtils.getAlamat();
-            String saldo = prefUtils.getSaldo();
-            int userType = prefUtils.getUserType();
-
-            User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+            User user = prefUtils.getUser();
             Model.setUser(user);
         }
 

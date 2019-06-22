@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginSuccess(LoginResponse.Data data) {
         int userId = data.getUserId();
         String nama = data.getNama();
+        String email = data.getEmail();
         String jenisKelamin = data.getJenisKelamin();
         String tempatLahir = data.getTempatLahir();
         String tanggalLahir = data.getTanggalLahir();
@@ -109,20 +110,13 @@ public class LoginActivity extends AppCompatActivity {
         String saldo = data.getSaldo();
         int userType = data.getUserType();
 
-        User user = new User(userId, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
+        User user = new User(userId, nama, email, jenisKelamin, tempatLahir, tanggalLahir, alamat, saldo, userType);
         Model.setUser(user);
 
         PrefUtils prefUtils = new PrefUtils(this);
 
         prefUtils.setLoggedIn(true);
-        prefUtils.setUserId(userId);
-        prefUtils.setNama(nama);
-        prefUtils.setJenisKelamin(jenisKelamin);
-        prefUtils.setTempatLahir(tempatLahir);
-        prefUtils.setTanggalLahir(tanggalLahir);
-        prefUtils.setAlamat(alamat);
-        prefUtils.setSaldo(saldo);
-        prefUtils.setUserType(userType);
+        prefUtils.saveUser(user);
 
         progressDialog.dismiss();
 

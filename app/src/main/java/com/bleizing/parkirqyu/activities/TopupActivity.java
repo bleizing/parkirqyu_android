@@ -3,6 +3,7 @@ package com.bleizing.parkirqyu.activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,6 +85,8 @@ public class TopupActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent intent = new Intent(TopupActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -145,7 +148,7 @@ public class TopupActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         if (finalType == 1) {
-                                            finish();
+                                            onBackPressed();
                                         }
                                     }
                                 })
@@ -165,7 +168,7 @@ public class TopupActivity extends AppCompatActivity {
             // Set user details
             userDetail = new UserDetail();
             userDetail.setUserFullName(Model.getUser().getNama());
-            userDetail.setEmail(Model.getUser().getAlamat());
+            userDetail.setEmail(Model.getUser().getEmail());
             userDetail.setPhoneNumber("0000000000");
 
 // Initiate address list
@@ -217,7 +220,7 @@ public class TopupActivity extends AppCompatActivity {
 
         progressDialog.dismiss();
 
-        CustomerDetails customer = new CustomerDetails(Model.getUser().getNama(), "", "", "0000000000");
+        CustomerDetails customer = new CustomerDetails(Model.getUser().getNama(), "", Model.getUser().getEmail(), "0000000000");
 
         TransactionRequest transactionRequest = new TransactionRequest(data.getInvoiceCode(), nominal);
 

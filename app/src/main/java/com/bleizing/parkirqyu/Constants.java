@@ -14,6 +14,7 @@ public class Constants {
     public static final String PREF_LOGGED_IN = "IsLoggedIn";
     public static final String PREF_USER_ID = "user_id";
     public static final String PREF_NAMA = "nama";
+    public static final String PREF_EMAIL = "email";
     public static final String PREF_JENIS_KELAMIN = "jenis_kelamin";
     public static final String PREF_TEMPAT_LAHIR = "tempat_lahir";
     public static final String PREF_TANGGAL_LAHIR = "tanggal_lahir";
