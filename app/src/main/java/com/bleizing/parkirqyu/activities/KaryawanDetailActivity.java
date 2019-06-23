@@ -23,6 +23,8 @@ import com.bleizing.parkirqyu.network.DeleteEmployeeResponse;
 import com.bleizing.parkirqyu.network.GetEmployeeByUserIdRequest;
 import com.bleizing.parkirqyu.network.GetEmployeeByUserIdResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
+import com.bleizing.parkirqyu.network.ResetPasswordRequest;
+import com.bleizing.parkirqyu.network.ResetPasswordResponse;
 
 import java.util.ArrayList;
 
@@ -90,6 +92,25 @@ public class KaryawanDetailActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 hapusEmployee(karyawan.getUserId());
+                            }
+                        })
+                        .setNegativeButton(KaryawanDetailActivity.this.getString(R.string.konfirmasi_batal), null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+
+        Button btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(KaryawanDetailActivity.this)
+                        .setTitle(KaryawanDetailActivity.this.getString(R.string.konfirmasi))
+                        .setMessage(KaryawanDetailActivity.this.getString(R.string.konfirmas_reset_password))
+                        .setPositiveButton(KaryawanDetailActivity.this.getString(R.string.konfirmasi_yakin), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                resetPassword(karyawan.getUserId());
                             }
                         })
                         .setNegativeButton(KaryawanDetailActivity.this.getString(R.string.konfirmasi_batal), null)
@@ -213,6 +234,43 @@ public class KaryawanDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DeleteEmployeeResponse> call, Throwable t) {
+                t.printStackTrace();
+                showToast(getString(R.string.connection_error));
+            }
+        });
+    }
+
+    private void resetPassword(int employeeId) {
+        progressDialog = new ProgressDialog(KaryawanDetailActivity.this);
+        progressDialog.setMessage("Sedang Diproses...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        ResetPasswordRequest request = new ResetPasswordRequest(Model.getUser().getUserId(), employeeId);
+
+        APIService apiService = HTTPClient.getClient().create(APIService.class);
+        Call<ResetPasswordResponse> call = apiService.resetPassword(request);
+        call.enqueue(new Callback<ResetPasswordResponse>() {
+            @Override
+            public void onResponse(Call<ResetPasswordResponse> call, Response<ResetPasswordResponse> response) {
+                if (response.isSuccessful()) {
+                    switch (response.body().getStatusCode()) {
+                        case Constants.STATUS_CODE_UPDATED :
+                            showToast(getString(R.string.reset_password_success));
+                            break;
+                        case Constants.STATUS_CODE_BAD_REQUEST :
+                            if (response.body().getData().getErrorList() != null) {
+                                failedResponse(response.body().getData().getErrorList());
+                            } else {
+                                showToast(response.body().getData().getMessage());
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResetPasswordResponse> call, Throwable t) {
                 t.printStackTrace();
                 showToast(getString(R.string.connection_error));
             }
