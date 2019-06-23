@@ -12,6 +12,11 @@ public class GetUserVehicleResponse extends BaseResponse<ArrayList<GetUserVehicl
         super.setData(data);
     }
 
+    @Override
+    public ArrayList<Data> getData() {
+        return super.getData();
+    }
+
     public class Data extends DataResponse {
         @SerializedName("id")
         @Expose

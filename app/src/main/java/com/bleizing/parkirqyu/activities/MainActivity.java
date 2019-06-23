@@ -37,12 +37,15 @@ import com.bleizing.parkirqyu.R;
 import com.bleizing.parkirqyu.RecyclerTouchListener;
 import com.bleizing.parkirqyu.RecyclerViewClickListener;
 import com.bleizing.parkirqyu.adapters.KendaraanAdapter;
+import com.bleizing.parkirqyu.adapters.KendaraanParkirAdapter;
 import com.bleizing.parkirqyu.models.Kendaraan;
+import com.bleizing.parkirqyu.models.KendaraanPakir;
 import com.bleizing.parkirqyu.models.Model;
 import com.bleizing.parkirqyu.models.User;
 import com.bleizing.parkirqyu.network.APIService;
 import com.bleizing.parkirqyu.network.BaseRequest;
 import com.bleizing.parkirqyu.network.GetUserVehicleResponse;
+import com.bleizing.parkirqyu.network.GetVehicleInParkirResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
 import com.bleizing.parkirqyu.network.LoginResponse;
 import com.bleizing.parkirqyu.utils.PrefUtils;
@@ -87,9 +90,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayList<Kendaraan> kendaraanArrayList;
-    private ArrayList<Kendaraan> kendaraanParkirArrayList;
+    private ArrayList<KendaraanPakir> kendaraanParkirArrayList;
 
     private KendaraanAdapter kendaraanAdapter;
+    private KendaraanParkirAdapter kendaraanParkirAdapter;
 
     private LinearLayout llKendaraanParkir;
     private LinearLayout llKendaraan;
@@ -187,12 +191,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         }
 
         kendaraanArrayList = new ArrayList<>();
+        kendaraanParkirArrayList = new ArrayList<>();
+
         initKendaraan();
+        initKendaraanParkir();
     }
 
     @Override
     public void onProcessRefresh() {
+        getUserInfo();
         getKendaraanList();
+        getKendaraanParkirList();
     }
 
     private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -323,6 +332,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                             getKendaraanListSuccess(response.body().getData());
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
+                            llKendaraan.setVisibility(View.GONE);
+
+                            kendaraanLoading = false;
+                            hideRefresh();
                             break;
                     }
                 }
@@ -333,7 +346,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                 t.printStackTrace();
                 llKendaraan.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
-                SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
+
+                kendaraanLoading = false;
+                hideRefresh();
             }
         });
     }
@@ -361,6 +376,72 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             llKendaraan.setVisibility(View.GONE);
         }
         kendaraanLoading = false;
+        hideRefresh();
+    }
+
+    private void initKendaraanParkir() {
+        RecyclerView rvKendaraanParkir = (RecyclerView) findViewById(R.id.kendaraan_parkir_recycler_view);
+        rvKendaraanParkir.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rvKendaraanParkir.setItemAnimator(new DefaultItemAnimator());
+
+        kendaraanParkirAdapter = new KendaraanParkirAdapter(this, kendaraanParkirArrayList);
+        rvKendaraanParkir.setAdapter(kendaraanParkirAdapter);
+    }
+
+    private void getKendaraanParkirList() {
+        if (kendaraanParkirArrayList != null && kendaraanParkirArrayList.size() > 0) {
+            kendaraanParkirArrayList.clear();
+        }
+
+        BaseRequest baseRequest = new BaseRequest(Model.getUser().getUserId());
+        APIService apiService = HTTPClient.getClient().create(APIService.class);
+        Call<GetVehicleInParkirResponse> call = apiService.getVehicleParkir(baseRequest);
+        call.enqueue(new Callback<GetVehicleInParkirResponse>() {
+            @Override
+            public void onResponse(Call<GetVehicleInParkirResponse> call, Response<GetVehicleInParkirResponse> response) {
+                if (response.isSuccessful()) {
+                    switch (response.body().getStatusCode()) {
+                        case Constants.STATUS_CODE_SUCCESS :
+                            getKendaraanParkirSuccess(response.body().getData());
+                            break;
+                        case Constants.STATUS_CODE_BAD_REQUEST :
+                            llKendaraanParkir.setVisibility(View.GONE);
+
+                            kendaraanParkirLoading = false;
+                            hideRefresh();
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetVehicleInParkirResponse> call, Throwable t) {
+                t.printStackTrace();
+                llKendaraanParkir.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+
+                kendaraanParkirLoading = false;
+                hideRefresh();
+            }
+        });
+    }
+
+    private void getKendaraanParkirSuccess(ArrayList<GetVehicleInParkirResponse.Data> dataArrayList) {
+        if (dataArrayList.size() > 0) {
+            for (GetVehicleInParkirResponse.Data data : dataArrayList) {
+                String infoParkir = data.getInfoParkir();
+                String nominal = data.getNominal();
+                String nomorRegistrasi = data.getNomorRegistrasi();
+
+                KendaraanPakir kendaraanPakir = new KendaraanPakir(infoParkir, nominal, nomorRegistrasi);
+                kendaraanParkirArrayList.add(kendaraanPakir);
+            }
+            llKendaraanParkir.setVisibility(View.VISIBLE);
+            kendaraanParkirAdapter.updateKendaraanParkirArrayList(kendaraanParkirArrayList);
+        } else {
+            llKendaraanParkir.setVisibility(View.GONE);
+        }
+        kendaraanParkirLoading = false;
         hideRefresh();
     }
 
@@ -477,8 +558,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                 setUserView();
             }
         }
-
-        getUserInfo();
     }
 
     private void hideRefresh() {
@@ -488,7 +567,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     }
 
     private void setUserView() {
-        tvNama.setText(Model.getUser().getNama());
-        tvSaldo.setText(Model.getUser().getSaldo());
+        if (!userLoading) {
+            tvNama.setText(Model.getUser().getNama());
+            tvSaldo.setText(Model.getUser().getSaldo());
+        }
     }
 }

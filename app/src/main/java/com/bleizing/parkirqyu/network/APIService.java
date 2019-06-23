@@ -14,6 +14,9 @@ public interface APIService {
     @POST("user/get_user_vehicle")
     Call<GetUserVehicleResponse> getUserVehicle(@Body BaseRequest baseRequest);
 
+    @POST("parkir/in_parkir")
+    Call<GetVehicleInParkirResponse> getVehicleParkir(@Body BaseRequest baseRequest);
+
     @POST("admin/employee/get_all")
     Call<GetAllEmployeeResponse> getAllEmployee(@Body BaseRequest baseRequest);
 

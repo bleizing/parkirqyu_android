@@ -117,7 +117,7 @@ public class KendaraanFormActivity extends AppCompatActivity {
 
                 jenisKendaraan = 1;
 
-                if (rbJenisKendaraan.getText().equals("Mobil")) {
+                if (rbJenisKendaraan.getText().equals("Motor")) {
                     jenisKendaraan = 2;
                 }
 

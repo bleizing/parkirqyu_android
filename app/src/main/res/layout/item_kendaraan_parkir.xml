@@ -20,15 +20,15 @@
             android:textSize="@dimen/_11ssp"/>
 
         <TextView
-            android:id="@+id/tv_vehicle_type"
+            android:id="@+id/tv_info_jam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
-            android:text="DARI JAM"
+            android:text="INFO JAM"
             android:textSize="@dimen/_11ssp"/>
 
         <TextView
-            android:id="@+id/tv_merk"
+            android:id="@+id/tv_nominal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
@@ -45,6 +45,7 @@
         android:layout_centerVertical="true">
 
         <Button
+            android:id="@+id/btn_selesai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Selesai"/>
