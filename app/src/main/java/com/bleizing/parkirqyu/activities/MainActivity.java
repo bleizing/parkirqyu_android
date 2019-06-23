@@ -123,6 +123,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         swipeRefreshLayout.setOnRefreshListener(refreshListener);
         refreshListener.onRefresh();
 
+        LinearLayout llTarifParkir = (LinearLayout) findViewById(R.id.ll_tarif_parkir);
+        llTarifParkir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        TextView tvLihatDetail = (TextView) findViewById(R.id.tv_lihat_detail);
+        tvLihatDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
+                startActivity(intent);
+            }
+        });
+
         LinearLayout llKaryawan = (LinearLayout) findViewById(R.id.ll_karyawan);
         llKendaraanParkir = (LinearLayout) findViewById(R.id.ll_kendaraan_parkir);
         llKendaraan = (LinearLayout) findViewById(R.id.ll_kendaraan);
@@ -284,12 +301,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body().getStatusCode() == Constants.STATUS_CODE_SUCCESS) {
                     getUserInfoSuccess(response.body().getData());
+                } else {
+                    userLoading = false;
+                    hideRefresh();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                t.printStackTrace();
+                userLoading = false;
+                hideRefresh();
             }
         });
     }
@@ -317,6 +339,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     }
 
     private void getKendaraanList() {
+        kendaraanLoading = true;
         if (kendaraanArrayList != null && kendaraanArrayList.size() > 0) {
             kendaraanArrayList.clear();
         }
@@ -389,6 +412,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     }
 
     private void getKendaraanParkirList() {
+        kendaraanParkirLoading = true;
         if (kendaraanParkirArrayList != null && kendaraanParkirArrayList.size() > 0) {
             kendaraanParkirArrayList.clear();
         }
@@ -561,7 +585,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
     }
 
     private void hideRefresh() {
-        if (!userLoading && !kendaraanLoading) {
+        if (!userLoading && !kendaraanLoading && !kendaraanParkirLoading) {
             SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
         }
     }

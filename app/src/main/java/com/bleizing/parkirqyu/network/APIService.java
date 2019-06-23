@@ -2,6 +2,7 @@ package com.bleizing.parkirqyu.network;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface APIService {
@@ -14,8 +15,8 @@ public interface APIService {
     @POST("user/get_user_vehicle")
     Call<GetUserVehicleResponse> getUserVehicle(@Body BaseRequest baseRequest);
 
-    @POST("parkir/in_parkir")
-    Call<GetVehicleInParkirResponse> getVehicleParkir(@Body BaseRequest baseRequest);
+    @POST("user/change_password")
+    Call<ChangePasswordResponse> processChangePassword(@Body ChangePasswordRequest request);
 
     @POST("admin/employee/get_all")
     Call<GetAllEmployeeResponse> getAllEmployee(@Body BaseRequest baseRequest);
@@ -32,6 +33,9 @@ public interface APIService {
     @POST("admin/employee/delete")
     Call<DeleteEmployeeResponse> deleteEmployee(@Body DeleteEmployeeRequest request);
 
+    @POST("admin/employee/reset_password")
+    Call<ResetPasswordResponse> resetPassword(@Body ResetPasswordRequest request);
+
     @POST("admin/vehicle/get_by_user_id")
     Call<GetUserVehicleResponse> getVehicleByUserId(@Body GetKendaraanByUserRequest request);
 
@@ -44,6 +48,9 @@ public interface APIService {
     @POST("admin/vehicle/delete")
     Call<DeleteVehicleResponse> deleteVehicle(@Body DeleteVehicleRequest request);
 
+    @GET("parkir/get_parkir_rate")
+    Call<GetParkirRateResponse> getParkirRate();
+
     @POST("parkir/check_in")
     Call<ProcessCheckInResponse> processCheckIn(@Body ProcessCheckInRequest request);
 
@@ -55,4 +62,8 @@ public interface APIService {
 
     @POST("topup/topup")
     Call<ProcessTopupResponse> processTopup(@Body ProcessTopupRequest request);
+
+    @POST("parkir/in_parkir")
+    Call<GetVehicleInParkirResponse> getVehicleParkir(@Body BaseRequest baseRequest);
+
 }

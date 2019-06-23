@@ -46,4 +46,8 @@
     <string name="btn_bayar">Bayar</string>
     <string name="hint_nominal">Nominal</string>
     <string name="btn_topup">Topup</string>
+    <string name="btn_ubah_password">Ubah Password</string>
+    <string name="hint_old_password">Password Lama</string>
+    <string name="hint_konfirmasi_password">Konfirmasi Password</string>
+    <string name="hint_new_password">Password Baru</string>
 </resources>

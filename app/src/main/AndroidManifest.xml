@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="false"
-        android:configChanges="keyboardHidden|orientation"
+        android:configChanges="orientation"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,25 +21,26 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".activities.UserDetailActivity"></activity>
+        <activity
+            android:name=".activities.UbahPasswordActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity android:name=".activities.UserDetailActivity"
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.TopupActivity"
             android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.CheckOutActivity"
-            android:theme="@style/ParkirqyuTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.ParkirScannerActivity"
-            android:theme="@style/ParkirqyuTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/ParkirqyuTheme"/>
         <activity
             android:name=".activities.KendaraanDetailActivity"
             android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KendaraanFormActivity"
-            android:theme="@style/ParkirqyuTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KendaraanActivity"
             android:theme="@style/ParkirqyuTheme" />
@@ -48,8 +49,7 @@
             android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KaryawanFormActivity"
-            android:theme="@style/ParkirqyuTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.KaryawanActivity"
             android:theme="@style/ParkirqyuTheme" />
