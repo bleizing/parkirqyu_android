@@ -1,20 +1,23 @@
 package com.bleizing.parkirqyu.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bleizing.parkirqyu.Constants;
 import com.bleizing.parkirqyu.R;
 import com.bleizing.parkirqyu.models.Model;
+import com.bleizing.parkirqyu.models.TarifParkir;
 import com.bleizing.parkirqyu.network.APIService;
-import com.bleizing.parkirqyu.network.ChangePasswordRequest;
-import com.bleizing.parkirqyu.network.ChangePasswordResponse;
+import com.bleizing.parkirqyu.network.ChangeParkirRateRequest;
+import com.bleizing.parkirqyu.network.ChangeTarifParkirResponse;
 import com.bleizing.parkirqyu.network.DataResponse;
 import com.bleizing.parkirqyu.network.HTTPClient;
 
@@ -24,43 +27,53 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UbahPasswordActivity extends AppCompatActivity {
+public class TarifParkirFormActivity extends AppCompatActivity {
 
-    private EditText editOldPassword;
-    private EditText editNewPassword;
-    private EditText editKonfirmasiPassword;
-
-    private String oldPassword;
-    private String newPassword;
-    private String konfirmasiPassword;
+    private TarifParkir tarifParkir;
 
     private ProgressDialog progressDialog;
+
+    private EditText editSatuJam;
+    private EditText editTiapJam;
+    private EditText editPerHari;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ubah_password);
+        setContentView(R.layout.activity_tarif_parkir_form);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        editOldPassword = (EditText) findViewById(R.id.edit_old_password);
-        editNewPassword = (EditText) findViewById(R.id.edit_new_password);
-        editKonfirmasiPassword = (EditText) findViewById(R.id.edit_konfirmasi_password);
+        tarifParkir = getIntent().getParcelableExtra("tarif_parkir");
+
+        editSatuJam = (EditText) findViewById(R.id.edit_satu_jam);
+        editTiapJam = (EditText) findViewById(R.id.edit_tiap_jam);
+        editPerHari = (EditText) findViewById(R.id.edit_per_hari);
+
+        TextView tvHeaderInput = (TextView) findViewById(R.id.tv_header_input);
+
+        String headerInput = "Mobil";
+        if (tarifParkir.getId() == 2) {
+            headerInput = "Motor";
+        }
+
+        tvHeaderInput.setText(headerInput);
+
+        editSatuJam.setText(String.valueOf(tarifParkir.getSatuJam()));
+        editTiapJam.setText(String.valueOf(tarifParkir.getTiapJam()));
+        editPerHari.setText(String.valueOf(tarifParkir.getPerHari()));
 
         Button btnSimpan = (Button) findViewById(R.id.btn_simpan);
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                oldPassword = editOldPassword.getText().toString();
-                newPassword = editNewPassword.getText().toString();
-                konfirmasiPassword = editKonfirmasiPassword.getText().toString();
+                int id = tarifParkir.getId();
+                if (!editSatuJam.getText().toString().equals("") && !editTiapJam.getText().toString().equals("") && !editPerHari.getText().toString().equals("")) {
+                    int satuJam = Integer.parseInt(editSatuJam.getText().toString());
+                    int tiapJam = Integer.parseInt(editTiapJam.getText().toString());
+                    int perHari = Integer.parseInt(editPerHari.getText().toString());
 
-                if (!oldPassword.equals("") && !newPassword.equals("") && !konfirmasiPassword.equals("")) {
-                    if (newPassword.equals(konfirmasiPassword)) {
-                        processUbahPassword(oldPassword, newPassword);
-                    } else {
-                        showToast("Konfirmasi Password harus sama dengan Password Baru");
-                    }
+                    ubahTarifParkir(id, satuJam, tiapJam, perHari);
                 } else {
                     showToast(getString(R.string.data_incompleted));
                 }
@@ -91,26 +104,28 @@ public class UbahPasswordActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent intent = new Intent(TarifParkirFormActivity.this, TarifParkirActivity.class);
+        startActivity(intent);
         finish();
     }
 
-    private void processUbahPassword(String oldPassword, String newPassword) {
-        progressDialog = new ProgressDialog(UbahPasswordActivity.this);
+    private void ubahTarifParkir(int id, int satuJam, int tiapJam, int perHari) {
+        progressDialog = new ProgressDialog(TarifParkirFormActivity.this);
         progressDialog.setMessage("Mohon Tunggu...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        ChangePasswordRequest request = new ChangePasswordRequest(Model.getUser().getUserId(), oldPassword, newPassword);
+        ChangeParkirRateRequest request = new ChangeParkirRateRequest(Model.getUser().getUserId(), id, satuJam, tiapJam, perHari);
 
         APIService apiService = HTTPClient.getClient().create(APIService.class);
-        Call<ChangePasswordResponse> call = apiService.processChangePassword(request);
-        call.enqueue(new Callback<ChangePasswordResponse>() {
+        Call<ChangeTarifParkirResponse> call = apiService.changeParkirRate(request);
+        call.enqueue(new Callback<ChangeTarifParkirResponse>() {
             @Override
-            public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
+            public void onResponse(Call<ChangeTarifParkirResponse> call, Response<ChangeTarifParkirResponse> response) {
                 if (response.isSuccessful()) {
                     switch (response.body().getStatusCode()) {
                         case Constants.STATUS_CODE_UPDATED :
-                            showToast("Password berhasil diubah");
+                            showToast("Tarif parkir berhasil diubah");
 
                             onBackPressed();
                             break;
@@ -126,7 +141,7 @@ public class UbahPasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
+            public void onFailure(Call<ChangeTarifParkirResponse> call, Throwable t) {
                 t.printStackTrace();
                 showToast(getString(R.string.connection_error));
             }
@@ -146,6 +161,6 @@ public class UbahPasswordActivity extends AppCompatActivity {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
-        Toast.makeText(UbahPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(TarifParkirFormActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

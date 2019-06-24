@@ -53,4 +53,7 @@
     <string name="btn_reset_password">Reset Password</string>
     <string name="konfirmas_reset_password">Apakah Anda Yakin untuk mereset password</string>
     <string name="reset_password_success">Reset Password Berhasil</string>
+    <string name="hint_satu_jam">Satu Jam Pertama</string>
+    <string name="hint_tiap_jam">Tiap Jam Berikutnya</string>
+    <string name="hint_per_hari">Per Hari (24 Jam)</string>
 </resources>

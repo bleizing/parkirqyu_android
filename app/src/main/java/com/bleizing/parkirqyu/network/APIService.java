@@ -48,6 +48,9 @@ public interface APIService {
     @POST("admin/vehicle/delete")
     Call<DeleteVehicleResponse> deleteVehicle(@Body DeleteVehicleRequest request);
 
+    @POST("admin/parkir_rate/edit")
+    Call<ChangeTarifParkirResponse> changeParkirRate(@Body ChangeParkirRateRequest request);
+
     @GET("parkir/get_parkir_rate")
     Call<GetParkirRateResponse> getParkirRate();
 
