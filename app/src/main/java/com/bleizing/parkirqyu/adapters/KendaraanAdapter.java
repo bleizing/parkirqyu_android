@@ -70,7 +70,11 @@ public class KendaraanAdapter extends RecyclerView.Adapter<KendaraanAdapter.View
                     intent.putExtra("karyawan", ((KendaraanActivity) context).karyawan);
                 }
                 context.startActivity(intent);
-                ((KendaraanActivity)context).finish();
+                if (type == 1) {
+                    ((MainActivity) context).finish();
+                } else {
+                    ((KendaraanActivity)context).finish();
+                }
             }
         });
 

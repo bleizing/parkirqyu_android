@@ -215,7 +215,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:text="@string/ubah" />
+                android:text="@string/ubah"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btn_hapus"
@@ -223,7 +224,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:text="@string/hapus" />
+                android:text="@string/hapus"
+                android:visibility="gone" />
 
         </LinearLayout>
 

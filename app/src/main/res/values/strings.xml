@@ -13,7 +13,7 @@
     <string name="hint_nama">Nama</string>
     <string name="hint_alamat">Alamat</string>
     <string name="hint_tempat_lahir">Tempat Lahir</string>
-    <string name="hint_tanggal_lahir">Tanggal Lahir</string>
+    <string name="hint_tanggal_lahir">Tanggal Lahir(dd/mm/yyyy)</string>
     <string name="laki_laki">Laki-Laki</string>
     <string name="perempuan">Perempuan</string>
     <string name="admin">Admin</string>

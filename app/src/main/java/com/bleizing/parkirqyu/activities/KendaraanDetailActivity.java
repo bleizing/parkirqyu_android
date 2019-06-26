@@ -106,6 +106,11 @@ public class KendaraanDetailActivity extends AppCompatActivity {
             }
         });
 
+        if (karyawan != null) {
+            btnUbah.setVisibility(View.VISIBLE);
+            btnHapus.setVisibility(View.VISIBLE);
+        }
+
         setData();
     }
 
