@@ -96,6 +96,7 @@ public class KaryawanDetailActivity extends AppCompatActivity {
                         })
                         .setNegativeButton(KaryawanDetailActivity.this.getString(R.string.konfirmasi_batal), null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setCancelable(false)
                         .show();
             }
         });
@@ -115,6 +116,7 @@ public class KaryawanDetailActivity extends AppCompatActivity {
                         })
                         .setNegativeButton(KaryawanDetailActivity.this.getString(R.string.konfirmasi_batal), null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setCancelable(false)
                         .show();
             }
         });

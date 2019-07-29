@@ -166,6 +166,62 @@
 
             </LinearLayout>
 
+            <!--Data Kendaraan Parkir-->
+            <LinearLayout
+                android:id="@+id/ll_all_kendaraan_parkir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:paddingTop="@dimen/_15sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingRight="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp"
+                android:paddingBottom="@dimen/_15sdp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Semua Kendaraan Parkir >"
+                    android:textSize="@dimen/_14ssp"/>
+
+            </LinearLayout>
+
+            <!--Data Transaksi-->
+            <LinearLayout
+                android:id="@+id/ll_all_transaksi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:paddingTop="@dimen/_15sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingRight="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp"
+                android:paddingBottom="@dimen/_15sdp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Semua Transaksi >"
+                    android:textSize="@dimen/_14ssp"/>
+
+            </LinearLayout>
+
             <!--Kendaraan Sedang Parkir-->
             <LinearLayout
                 android:id="@+id/ll_kendaraan_parkir"

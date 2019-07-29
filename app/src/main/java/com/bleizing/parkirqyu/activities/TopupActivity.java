@@ -152,6 +152,7 @@ public class TopupActivity extends AppCompatActivity {
                                         }
                                     }
                                 })
+                                .setCancelable(false)
                                 .show();
                     }
                 }) // set transaction finish callback (sdk callback)

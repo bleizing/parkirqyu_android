@@ -52,6 +52,16 @@ public class UserDetailActivity extends AppCompatActivity {
         tvTempatLahir.setText(Model.getUser().getTempatLahir());
         tvTanggalLahir.setText(Model.getUser().getTanggalLahir());
         tvSebagai.setText(userType);
+
+        Button btnLihatTransaksi = (Button) findViewById(R.id.btn_lihat_transaksi);
+        btnLihatTransaksi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserDetailActivity.this, LogTransaksiActivity.class);
+                intent.putExtra("isAllData", false);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

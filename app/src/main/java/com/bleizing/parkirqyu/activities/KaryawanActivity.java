@@ -134,6 +134,8 @@ public class KaryawanActivity extends AppCompatActivity implements SwipeRefreshU
                             getAllEmployeeSuccess(response.body().getData());
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
+                            SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
+
                             break;
                     }
                 }

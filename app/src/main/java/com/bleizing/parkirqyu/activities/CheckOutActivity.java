@@ -106,6 +106,7 @@ public class CheckOutActivity extends AppCompatActivity {
         final View view = LayoutInflater.from(CheckOutActivity.this).inflate(R.layout.dialog_checkout_response, null);
         final AlertDialog dialog = new AlertDialog.Builder(CheckOutActivity.this).create();
         dialog.setView(view);
+        dialog.setCancelable(false);
 
         String message = "";
 

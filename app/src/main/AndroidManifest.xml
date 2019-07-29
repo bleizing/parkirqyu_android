@@ -31,7 +31,8 @@
         <activity
             android:name=".activities.TarifParkirFormActivity"
             android:theme="@style/ParkirqyuTheme" />
-        <activity android:name=".activities.TarifParkirActivity"
+        <activity
+            android:name=".activities.TarifParkirActivity"
             android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.UbahPasswordActivity"
@@ -71,6 +72,10 @@
             android:theme="@style/ParkirqyuTheme" />
         <activity
             android:name=".activities.MainActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity android:name=".activities.AllKendaraanParkirActivity"
+            android:theme="@style/ParkirqyuTheme" />
+        <activity android:name=".activities.LogTransaksiActivity"
             android:theme="@style/ParkirqyuTheme" />
     </application>
 

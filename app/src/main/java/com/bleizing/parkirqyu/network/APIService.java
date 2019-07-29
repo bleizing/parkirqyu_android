@@ -51,6 +51,12 @@ public interface APIService {
     @POST("admin/parkir_rate/edit")
     Call<ChangeTarifParkirResponse> changeParkirRate(@Body ChangeParkirRateRequest request);
 
+    @POST("admin/transaction/get_log_transaction")
+    Call<GetLogTransactionResponse> getAllLogTransaction(@Body BaseRequest baseRequest);
+
+    @POST("admin/transaction/in_parkir")
+    Call<GetVehicleInParkirResponse> getAllVehicleParkir(@Body BaseRequest baseRequest);
+
     @GET("parkir/get_parkir_rate")
     Call<GetParkirRateResponse> getParkirRate();
 
@@ -68,5 +74,10 @@ public interface APIService {
 
     @POST("parkir/in_parkir")
     Call<GetVehicleInParkirResponse> getVehicleParkir(@Body BaseRequest baseRequest);
+
+    @POST("parkir/get_user_log_transaction")
+    Call<GetLogTransactionResponse> getUserLogTransaction(@Body BaseRequest baseRequest);
+
+
 
 }

@@ -149,6 +149,8 @@ public class KendaraanActivity extends AppCompatActivity implements SwipeRefresh
                             getKendaraanListSuccess(response.body().getData());
                             break;
                         case Constants.STATUS_CODE_BAD_REQUEST :
+                            SwipeRefreshUtils.hideRefresh(swipeRefreshLayout);
+
                             break;
                     }
                 }

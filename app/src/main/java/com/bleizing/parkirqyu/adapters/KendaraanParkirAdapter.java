@@ -22,9 +22,12 @@ public class KendaraanParkirAdapter extends RecyclerView.Adapter<KendaraanParkir
 
     private ArrayList<KendaraanPakir> kendaraanPakirArrayList;
 
-    public KendaraanParkirAdapter(Context context, ArrayList<KendaraanPakir> kendaraanPakirArrayList) {
+    private boolean isAllData;
+
+    public KendaraanParkirAdapter(Context context, ArrayList<KendaraanPakir> kendaraanPakirArrayList, boolean isAllData) {
         this.context = context;
         this.kendaraanPakirArrayList = kendaraanPakirArrayList;
+        this.isAllData = isAllData;
     }
 
     @NonNull
@@ -42,12 +45,15 @@ public class KendaraanParkirAdapter extends RecyclerView.Adapter<KendaraanParkir
         viewHolder.tvInfoJam.setText(kendaraanPakir.getInfoParkir());
         viewHolder.tvNominal.setText(kendaraanPakir.getNominal());
 
-        viewHolder.btnSelesai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) context).showBarcode(kendaraanPakir.getNomorRegistrasi());
-            }
-        });
+        if (!isAllData) {
+            viewHolder.btnSelesai.setVisibility(View.VISIBLE);
+            viewHolder.btnSelesai.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MainActivity) context).showBarcode(kendaraanPakir.getNomorRegistrasi());
+                }
+            });
+        }
     }
 
     @Override

@@ -8,34 +8,34 @@
     android:background="@color/colorPrimary">
 
     <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_nomor_registrasi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="NOMOR REGISTRASI"
+        android:textSize="@dimen/_11ssp"/>
 
-        <TextView
-            android:id="@+id/tv_nomor_registrasi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NOMOR REGISTRASI"
-            android:textSize="@dimen/_11ssp"/>
+    <TextView
+        android:id="@+id/tv_info_jam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:text="INFO JAM"
+        android:textSize="@dimen/_11ssp"/>
 
-        <TextView
-            android:id="@+id/tv_info_jam"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="INFO JAM"
-            android:textSize="@dimen/_11ssp"/>
+    <TextView
+        android:id="@+id/tv_nominal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:text="NOMINAL"
+        android:textSize="@dimen/_11ssp"/>
 
-        <TextView
-            android:id="@+id/tv_nominal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="NOMINAL"
-            android:textSize="@dimen/_11ssp"/>
-
-    </LinearLayout>
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -48,7 +48,9 @@
             android:id="@+id/btn_selesai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Selesai"/>
+
     </LinearLayout>
 
 </RelativeLayout>

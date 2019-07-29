@@ -133,6 +133,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
+                    alertDialog.setCancelable(false);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasPermission()) {
 
@@ -154,6 +155,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
                                 });
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
+                        alertDialog.setCancelable(false);
                     }
                 }
             }
@@ -211,6 +213,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
                 rgJenisKendaraan.check(R.id.rb_mobil);
 
                 dialogManual.setView(viewDialog);
+                dialogManual.setCancelable(false);
 
                 LinearLayout llJenisKendaraan = (LinearLayout) viewDialog.findViewById(R.id.ll_jenis_kendaraan);
 
@@ -301,6 +304,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
         final View view = LayoutInflater.from(ParkirScannerActivity.this).inflate(R.layout.dialog_checkin_response, null);
         final AlertDialog dialog = new AlertDialog.Builder(ParkirScannerActivity.this).create();
         dialog.setView(view);
+        dialog.setCancelable(false);
 
         TextView tvCheckinResponse = (TextView) view.findViewById(R.id.tv_checkin_response);
         tvCheckinResponse.setText(message);
@@ -369,6 +373,7 @@ public class ParkirScannerActivity extends AppCompatActivity {
         final View view = LayoutInflater.from(ParkirScannerActivity.this).inflate(R.layout.dialog_precheckout_failed, null);
         final AlertDialog dialog = new AlertDialog.Builder(ParkirScannerActivity.this).create();
         dialog.setView(view);
+        dialog.setCancelable(false);
 
         Button btnOk = (Button) view.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {

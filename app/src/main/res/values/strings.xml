@@ -56,4 +56,5 @@
     <string name="hint_satu_jam">Satu Jam Pertama</string>
     <string name="hint_tiap_jam">Tiap Jam Berikutnya</string>
     <string name="hint_per_hari">Per Hari (24 Jam)</string>
+    <string name="btn_lihat_log_transaksi">Lihat Log Transaksi</string>
 </resources>

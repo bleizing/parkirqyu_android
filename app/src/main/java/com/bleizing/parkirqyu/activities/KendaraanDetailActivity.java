@@ -102,6 +102,7 @@ public class KendaraanDetailActivity extends AppCompatActivity {
                         })
                         .setNegativeButton(getString(R.string.konfirmasi_batal), null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setCancelable(false)
                         .show();
             }
         });

@@ -142,8 +142,30 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         });
 
         LinearLayout llKaryawan = (LinearLayout) findViewById(R.id.ll_karyawan);
+
         llKendaraanParkir = (LinearLayout) findViewById(R.id.ll_kendaraan_parkir);
         llKendaraan = (LinearLayout) findViewById(R.id.ll_kendaraan);
+
+        LinearLayout llAllKendaraanParkir = (LinearLayout) findViewById(R.id.ll_all_kendaraan_parkir);
+        LinearLayout llAllTransaksi = (LinearLayout) findViewById(R.id.ll_all_transaksi);
+
+        llAllKendaraanParkir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AllKendaraanParkirActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        llAllTransaksi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LogTransaksiActivity.class);
+                intent.putExtra("isAllData", true);
+                startActivity(intent);
+            }
+        });
+
         Button btnBertugas = (Button) findViewById(R.id.btn_bertugas);
         Button btnCheckin = (Button) findViewById(R.id.btn_checkin);
 
@@ -177,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
 
         if (Model.getUser().getUserType() == 1) {
             btnCheckin.setVisibility(View.VISIBLE);
+            llAllKendaraanParkir.setVisibility(View.VISIBLE);
+            llAllTransaksi.setVisibility(View.VISIBLE);
         }
 
         TextView tvLogout = (TextView) findViewById(R.id.tv_logout);
@@ -254,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                             });
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.setCancelable(false);
                     alertDialog.show();
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasPermission()) {
@@ -275,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
                                     }
                                 });
                         AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.setCancelable(false);
                         alertDialog.show();
                     }
                 }
@@ -408,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
         rvKendaraanParkir.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvKendaraanParkir.setItemAnimator(new DefaultItemAnimator());
 
-        kendaraanParkirAdapter = new KendaraanParkirAdapter(this, kendaraanParkirArrayList);
+        kendaraanParkirAdapter = new KendaraanParkirAdapter(this, kendaraanParkirArrayList, false);
         rvKendaraanParkir.setAdapter(kendaraanParkirAdapter);
     }
 
@@ -481,6 +507,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshUtils
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_barcode, null);
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setView(view);
+            dialog.setCancelable(false);
 
             TextView tvNomorRegistrasi = (TextView) view.findViewById(R.id.tv_nomor_registrasi);
             tvNomorRegistrasi.setText(nomorRegistrasi);
