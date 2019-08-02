@@ -1,30 +1,17 @@
-package com.bleizing.parkirqyu.network;
+package com.bleizing.parkirqyu.models;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
 
-public class ProcessCheckInRequest extends BaseRequest {
-
-    @SerializedName("nomor_registrasi")
-    @Expose
+public class KendaraanCheckIn extends SugarRecord {
     private String nomorRegistrasi;
-
-    @SerializedName("vehicle_type")
-    @Expose
     private int vehicleType;
-
-    @SerializedName("time_start")
-    @Expose
     private String timeStart;
 
-    public ProcessCheckInRequest(int userId, String nomorRegistrasi, int vehicleType) {
-        super(userId);
-        this.nomorRegistrasi = nomorRegistrasi;
-        this.vehicleType = vehicleType;
+    public KendaraanCheckIn() {
+
     }
 
-    public ProcessCheckInRequest(int userId, String nomorRegistrasi, int vehicleType, String timeStart) {
-        super(userId);
+    public KendaraanCheckIn(String nomorRegistrasi, int vehicleType, String timeStart) {
         this.nomorRegistrasi = nomorRegistrasi;
         this.vehicleType = vehicleType;
         this.timeStart = timeStart;

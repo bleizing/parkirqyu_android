@@ -1,9 +1,8 @@
 package com.bleizing.parkirqyu.models;
 
-import java.util.ArrayList;
-
 public class Model {
     private static User user;
+    private static boolean networkAvailable;
 
     public static void setUser(User user) {
         Model.user = user;
@@ -11,5 +10,13 @@ public class Model {
 
     public static User getUser() {
         return user;
+    }
+
+    public static void setNetworkAvailable(boolean networkAvailable) {
+        Model.networkAvailable = networkAvailable;
+    }
+
+    public static boolean isNetworkAvailable() {
+        return networkAvailable;
     }
 }

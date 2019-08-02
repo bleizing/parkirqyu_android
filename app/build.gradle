@@ -55,4 +55,6 @@ dependencies {
     }
 
     implementation 'com.midtrans:uikit:1.22.0-SANDBOX'
+
+    implementation 'com.github.satyan:sugar:1.4'
 }

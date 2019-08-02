@@ -2,10 +2,13 @@ package com.bleizing.parkirqyu.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -14,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bleizing.parkirqyu.Constants;
+import com.bleizing.parkirqyu.NetworkReceiver;
 import com.bleizing.parkirqyu.R;
+import com.bleizing.parkirqyu.models.KendaraanCheckIn;
 import com.bleizing.parkirqyu.models.Model;
 import com.bleizing.parkirqyu.network.APIService;
 import com.bleizing.parkirqyu.network.HTTPClient;
@@ -36,6 +42,7 @@ import com.bleizing.parkirqyu.network.ProcessCheckInRequest;
 import com.bleizing.parkirqyu.network.ProcessCheckInResponse;
 import com.bleizing.parkirqyu.network.ProcessPreCheckOutRequest;
 import com.bleizing.parkirqyu.network.ProcessPreCheckOutResponse;
+import com.bleizing.parkirqyu.utils.NetworkUtils;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.core.IViewFinder;
@@ -47,6 +54,8 @@ import retrofit2.Response;
 
 public class ParkirScannerActivity extends AppCompatActivity {
     private static final String TAG = "ParkirScannerActivity";
+
+    private BroadcastReceiver networkReceiver;
 
     private ZXingScannerView scannerView;
 
@@ -75,6 +84,8 @@ public class ParkirScannerActivity extends AppCompatActivity {
         type = intent.getIntExtra("type", 0);
 
         initView();
+
+        NetworkUtils.checkNetwork(this);
     }
 
     private ZXingScannerView.ResultHandler resultHandler = new ZXingScannerView.ResultHandler() {
@@ -88,6 +99,17 @@ public class ParkirScannerActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (networkReceiver == null) {
+            networkReceiver = new NetworkReceiver();
+        }
+
+        registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 
     @Override
     protected void onResume() {
@@ -106,6 +128,15 @@ public class ParkirScannerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         scannerView.stopCamera();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (networkReceiver != null) {
+            unregisterReceiver(networkReceiver);
+        }
     }
 
     @Override
@@ -273,6 +304,14 @@ public class ParkirScannerActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        if (Model.isNetworkAvailable()) {
+            processCheckInOnline(nomorRegistrasi, fromScanner);
+        } else {
+            processCheckInLocal(nomorRegistrasi, fromScanner);
+        }
+    }
+
+    private void processCheckInOnline(String nomorRegistrasi, final boolean fromScanner) {
         ProcessCheckInRequest request = new ProcessCheckInRequest(Model.getUser().getUserId(), nomorRegistrasi, vehicleType);
         APIService apiService = HTTPClient.getClient().create(APIService.class);
         Call<ProcessCheckInResponse> call = apiService.processCheckIn(request);
@@ -281,10 +320,10 @@ public class ParkirScannerActivity extends AppCompatActivity {
             public void onResponse(Call<ProcessCheckInResponse> call, Response<ProcessCheckInResponse> response) {
                 if (response.isSuccessful()) {
                     switch (response.body().getStatusCode()) {
-                        case Constants.STATUS_CODE_CREATED :
+                        case Constants.STATUS_CODE_CREATED:
                             processCheckinResponse("Check in berhasil. Silahkan masuk.", true, fromScanner);
                             break;
-                        case Constants.STATUS_CODE_BAD_REQUEST :
+                        case Constants.STATUS_CODE_BAD_REQUEST:
                             processCheckinResponse("Mohon maaf, check in gagal. Harap hubungi petugas.", false, fromScanner);
                             break;
                     }
@@ -298,6 +337,13 @@ public class ParkirScannerActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+    }
+
+    private void processCheckInLocal(String nomorRegistrasi, final boolean fromScanner) {
+        KendaraanCheckIn kendaraanCheckIn = new KendaraanCheckIn(nomorRegistrasi, vehicleType, NetworkUtils.getCurrentTimeStamp());
+        kendaraanCheckIn.save();
+
+        processCheckinResponse("Check in berhasil. Silahkan masuk.", true, fromScanner);
     }
 
     private void processCheckinResponse(String message, final boolean isSuccess, final boolean fromScanner) {
