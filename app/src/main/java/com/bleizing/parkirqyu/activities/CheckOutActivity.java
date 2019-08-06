@@ -56,7 +56,7 @@ public class CheckOutActivity extends AppCompatActivity {
             }
         });
 
-        if (data.getSaldoEnough() == 0) {
+        if (data.getSaldoEnough() == 2) {
             btnBayar.setText("Bayar Manual");
             tvCash.setVisibility(View.VISIBLE);
         }
